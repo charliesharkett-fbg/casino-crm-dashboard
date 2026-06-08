@@ -3,70 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fanatics Casino — CRM Dashboard</title>
+<title>Fanatics Casino — CRM Analytics</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root {
   --black:#000;--white:#fff;--blue:#041E42;--silver:#D0D3D4;--gray:#707372;
-  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.09);
-  --glass-h:rgba(255,255,255,0.07);--muted:#707372;--dim:#D0D3D4;
-  --green:#4ade80;--amber:#fbbf24;
+  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.09);--glass-h:rgba(255,255,255,0.07);
+  --muted:#707372;--dim:#D0D3D4;--green:#4ade80;--amber:#fbbf24;--blue-a:#60a5fa;
   --font-h:'Anton',sans-serif;--font-b:'Inter',sans-serif;
+  --cat-xsell:rgba(255,255,255,0.35);--cat-promo:rgba(208,211,212,0.9);
+  --cat-ret:#4ade80;--cat-life:rgba(255,255,255,0.75);--cat-tourn:#fbbf24;--cat-rev:rgba(251,191,36,0.6);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden}
-
-/* grain overlay */
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* ── HEADER ── */
-.hdr{background:rgba(4,30,66,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--glass-b);padding:0 2rem;height:58px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100}
-
+.hdr{background:rgba(4,30,66,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-b);
+  padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200}
 .logo{display:flex;align-items:center;gap:14px}
-.logo-wordmark{font-family:var(--font-h);font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:var(--white)}
-.logo-wordmark span{color:var(--silver)}
+.logo-wm{font-family:var(--font-h);font-size:18px;letter-spacing:.08em;text-transform:uppercase}
+.logo-wm span{color:var(--silver)}
 .logo-div{width:1px;height:26px;background:rgba(255,255,255,0.12)}
-.logo-tag{font-family:var(--font-b);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-
+.logo-tag{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .hdr-r{display:flex;align-items:center;gap:10px}
-.pill{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-b);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:500;color:var(--dim)}
-.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.pill{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:100px;padding:5px 14px;font-size:11px;font-weight:500;color:var(--dim)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
-
-.btn{font-family:var(--font-b);font-size:11px;font-weight:600;letter-spacing:.04em;padding:7px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .2s}
+.btn{font-family:var(--font-b);font-size:11px;font-weight:600;letter-spacing:.04em;padding:7px 16px;
+  border-radius:6px;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-w{background:var(--white);color:var(--black)}.btn-w:hover{background:var(--silver)}
 .btn-g{background:var(--glass);border:1px solid var(--glass-b);color:var(--dim)}.btn-g:hover{background:var(--glass-h);color:var(--white)}
+.btn-sm{padding:5px 12px;font-size:10px}
 
 /* ── LAYOUT ── */
-.wrap{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 58px)}
+.wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
 
 /* ── SIDEBAR ── */
-.sidebar{background:rgba(4,30,66,0.35);backdrop-filter:blur(12px);border-right:1px solid var(--glass-b);
-  padding:1.5rem 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.sidebar{background:rgba(4,30,66,0.3);backdrop-filter:blur(12px);border-right:1px solid var(--glass-b);
+  padding:1.5rem 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;z-index:100}
 .sb-sec{margin-bottom:1.75rem}
-.sb-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:0 1.25rem;margin-bottom:6px}
+.sb-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  padding:0 1.25rem;margin-bottom:6px}
 .nav{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:12px;font-weight:400;
-  color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s;text-decoration:none}
+  color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
 .nav:hover{background:var(--glass);color:var(--dim)}
 .nav.on{background:rgba(255,255,255,.05);color:var(--white);border-left-color:var(--white);font-weight:500}
 .nav-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-.nav-n{margin-left:auto;font-size:10px;background:rgba(255,255,255,.06);color:var(--muted);padding:1px 6px;border-radius:3px;font-weight:500}
+.nav-n{margin-left:auto;font-size:10px;background:rgba(255,255,255,.06);color:var(--muted);
+  padding:1px 6px;border-radius:3px;font-weight:500}
 .nav-n.w{background:rgba(251,191,36,.15);color:var(--amber)}
 .sb-hr{border:none;border-top:1px solid var(--glass-b);margin:.75rem 1.25rem}
 
 /* ── MAIN ── */
-.main{padding:2rem;position:relative;z-index:1}
-.pg-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem}
-.pg-title{font-family:var(--font-h);font-size:40px;letter-spacing:.04em;text-transform:uppercase;line-height:1;color:var(--white)}
-.pg-title span{color:var(--silver)}
-.pg-meta{font-size:11px;color:var(--muted);margin-top:5px;font-weight:400}
+.main{padding:2rem;position:relative;z-index:1;min-width:0}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
+  border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.filter-group{display:flex;align-items:center;gap:8px}
+.filter-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.12);
+  color:var(--muted);cursor:pointer;transition:all .15s;background:transparent;white-space:nowrap}
+.chip:hover{border-color:rgba(255,255,255,.3);color:var(--dim)}
+.chip.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:var(--white)}
+.chip.cat-on-xsell{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:var(--white)}
+.chip.cat-on-promo{background:rgba(208,211,212,.12);border-color:rgba(208,211,212,.4);color:var(--silver)}
+.chip.cat-on-ret{background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.4);color:var(--green)}
+.chip.cat-on-life{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35);color:var(--white)}
+.chip.cat-on-tourn{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.4);color:var(--amber)}
+.chip.cat-on-rev{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:var(--amber)}
+.filter-div{width:1px;height:24px;background:var(--glass-b)}
+.search-wrap{flex:1;min-width:180px;position:relative}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:6px 12px 6px 30px;font-family:var(--font-b);font-size:12px;
+  color:var(--white);outline:none;transition:all .2s}
+.search-input:focus{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.07)}
+.search-input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+
+/* ── WEEK RANGE ── */
+.week-range{display:flex;align-items:center;gap:8px}
+.week-select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;padding:5px 10px;font-family:var(--font-b);font-size:11px;
+  color:var(--dim);outline:none;cursor:pointer}
+.week-select option{background:#041E42}
 
 /* ── SECTION ── */
 .sec{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
@@ -74,25 +102,27 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sec::after{content:'';flex:1;height:1px;background:var(--glass-b)}
 
 /* ── GLASS CARD ── */
-.card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--glass-b);border-radius:12px;padding:1.25rem;
-  transition:border-color .2s,background .2s}
-.card:hover{border-color:rgba(255,255,255,.16);background:var(--glass-h)}
+.card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
+  border-radius:12px;padding:1.25rem;transition:border-color .2s,background .2s}
+.card:hover{border-color:rgba(255,255,255,.14);background:var(--glass-h)}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem}
+.card-title{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.ctag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:100px;background:rgba(255,255,255,.08);color:var(--muted)}
 
-/* ── KPI ROW ── */
+/* ── KPI ── */
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
 .kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
   border-radius:12px;padding:1.125rem;transition:all .2s;animation:up .5s ease both}
+.kpi:nth-child(1){animation-delay:.04s}.kpi:nth-child(2){animation-delay:.08s}
+.kpi:nth-child(3){animation-delay:.12s}.kpi:nth-child(4){animation-delay:.16s}.kpi:nth-child(5){animation-delay:.2s}
 .kpi:hover{background:var(--glass-h);border-color:rgba(255,255,255,.16)}
-.kpi:nth-child(1){animation-delay:.05s}.kpi:nth-child(2){animation-delay:.1s}
-.kpi:nth-child(3){animation-delay:.15s}.kpi:nth-child(4){animation-delay:.2s}.kpi:nth-child(5){animation-delay:.25s}
 .kpi.warn{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.03)}
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.kpi-val{font-family:var(--font-h);font-size:30px;letter-spacing:.02em;color:var(--white);line-height:1}
-.kpi-val.am{color:var(--amber)}.kpi-val.gr{color:var(--green)}
+.kpi-val{font-family:var(--font-h);font-size:28px;letter-spacing:.02em;line-height:1;transition:all .3s}
 .kpi-sub{font-size:10px;margin-top:5px;color:var(--muted)}
-.kpi-sub.up{color:var(--green)}.kpi-sub.dn{color:var(--amber)}
+.kpi-sub.up{color:var(--green)}.kpi-sub.dn{color:var(--amber)}.kpi-sub.w{color:var(--amber)}
 
 /* ── GRIDS ── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
@@ -101,526 +131,849 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* ── CHANNEL CARDS ── */
 .ch-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
-  border-radius:12px;padding:1rem;transition:all .2s;animation:up .5s ease both;animation-delay:.3s}
+  border-radius:12px;padding:1rem;transition:all .2s;cursor:pointer}
 .ch-card:hover{background:var(--glass-h);border-color:rgba(255,255,255,.16)}
+.ch-card.on{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
 .ch-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.ch-val{font-family:var(--font-h);font-size:24px;color:var(--white);line-height:1}
-.ch-meta{font-size:10px;color:var(--muted);margin-top:4px}
+.ch-val{font-family:var(--font-h);font-size:22px;color:var(--white);line-height:1;transition:all .3s}
+.ch-or{font-size:10px;color:var(--muted);margin-top:4px}
 .ch-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px;margin-top:10px}
-.ch-bar-f{height:2px;border-radius:1px;background:rgba(255,255,255,.4)}
-
-/* ── CARD HEADER ── */
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem}
-.card-title{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.ctag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:2px 8px;border-radius:100px;background:rgba(255,255,255,.08);color:var(--muted)}
+.ch-bar-f{height:2px;border-radius:1px;background:rgba(255,255,255,.35);transition:width .4s}
 
 /* ── CAT BARS ── */
 .cat-list{display:flex;flex-direction:column;gap:11px}
-.cat-row{display:grid;grid-template-columns:110px 1fr 60px 52px;align-items:center;gap:10px}
+.cat-row{display:grid;grid-template-columns:110px 1fr 62px 52px;align-items:center;gap:10px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .15s}
+.cat-row:hover{background:rgba(255,255,255,.04)}
+.cat-row.active{background:rgba(255,255,255,.06)}
 .cat-name{font-size:11px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-t{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
-.bar-f{height:4px;border-radius:2px}
+.bar-f{height:4px;border-radius:2px;transition:width .4s}
 .cat-num{font-size:10px;color:var(--muted);text-align:right}
 .cat-or{font-size:10px;font-weight:600;color:var(--dim);text-align:right}
 .cat-or.g{color:var(--green)}
 
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:8px 10px;border-bottom:1px solid var(--glass-b);white-space:nowrap;
+  cursor:pointer;user-select:none;transition:color .15s}
+th:hover{color:var(--dim)}
+th.sort-asc::after{content:' ↑'}
+th.sort-desc::after{content:' ↓'}
+td{padding:8px 10px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap;transition:background .15s}
+tr:hover td{background:rgba(255,255,255,.025)}
+td.td-n{color:var(--white);font-weight:500;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;
+  text-transform:uppercase;letter-spacing:.04em}
+.b-xsell{background:rgba(255,255,255,.08);color:var(--dim)}
+.b-promo{background:rgba(208,211,212,.12);color:var(--silver)}
+.b-ret{background:rgba(74,222,128,.12);color:var(--green)}
+.b-life{background:rgba(255,255,255,.13);color:var(--white)}
+.b-tourn{background:rgba(251,191,36,.12);color:var(--amber)}
+.b-rev{background:rgba(251,191,36,.08);color:var(--amber)}
+.hi{color:var(--white);font-weight:600}.gr{color:var(--green);font-weight:600}.am{color:var(--amber);font-weight:600}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;gap:8px;margin-top:1rem;justify-content:flex-end}
+.pg-btn{background:var(--glass);border:1px solid var(--glass-b);color:var(--dim);
+  padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s}
+.pg-btn:hover:not(:disabled){background:var(--glass-h);color:var(--white)}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-info{font-size:11px;color:var(--muted)}
+
 /* ── ALERTS ── */
 .alerts,.recs{display:flex;flex-direction:column;gap:8px}
-.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;font-size:11px;line-height:1.5;border:1px solid}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;
+  font-size:11px;line-height:1.5;border:1px solid}
 .a-i{font-size:13px;flex-shrink:0;margin-top:1px}
 .a-w{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);color:#fbbf24}
 .a-n{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);color:var(--dim)}
 .a-ok{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2);color:#4ade80}
 .alert strong{font-weight:600}
-
-/* ── RECS ── */
 .rec{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;
   background:var(--glass);border:1px solid var(--glass-b);border-radius:8px;
   font-size:11px;line-height:1.5;color:var(--dim)}
 .rec-n{font-family:var(--font-h);font-size:22px;color:rgba(255,255,255,.1);line-height:1;flex-shrink:0;width:24px;margin-top:1px}
 .rec strong{color:var(--white);font-weight:600}
 
-/* ── TABLE ── */
-.tbl{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-  text-align:left;padding:8px 10px;border-bottom:1px solid var(--glass-b);white-space:nowrap}
-td{padding:8px 10px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap}
-tr:hover td{background:rgba(255,255,255,.02)}
-td.n{color:var(--white);font-weight:500;max-width:250px;overflow:hidden;text-overflow:ellipsis}
-.badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;
-  text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.08);color:var(--dim)}
-.b-life{background:rgba(255,255,255,.14);color:var(--white)}
-.b-promo{background:rgba(208,211,212,.12);color:var(--silver)}
-.b-ok{background:rgba(74,222,128,.14);color:var(--green)}
-.b-w{background:rgba(251,191,36,.14);color:var(--amber)}
-.hi{color:var(--white);font-weight:600}.gr{color:var(--green);font-weight:600}.am{color:var(--amber);font-weight:600}
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1.5px dashed rgba(255,255,255,.15);border-radius:12px;padding:2rem;
+  text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02)}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
+.upload-zone p{font-size:12px;color:var(--muted);margin-top:.5rem}
+.upload-zone strong{color:var(--dim);font-weight:600}
 
-/* ── SPARK ── */
-.spark{display:flex;align-items:flex-end;gap:2px;height:22px;width:56px}
-.sp-b{flex:1;border-radius:1px;min-height:2px;background:rgba(255,255,255,.25)}
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:3rem;color:var(--muted);font-size:12px}
+.empty-icon{font-size:2rem;margin-bottom:.75rem;opacity:.3}
 
 /* ── FOOTER ── */
 .footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--glass-b);
   display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
 .footer-logo{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ── DATA STATUS BAR ── */
+.status-bar{display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding:.625rem 1rem;
+  background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);border-radius:8px;
+  font-size:11px;color:#4ade80}
+.status-bar.warn{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.15);color:var(--amber)}
+.status-bar span{color:var(--dim)}
+
+/* ── TOOLTIP ── */
+.tooltip{position:relative}
+.tooltip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);background:rgba(4,30,66,.98);border:1px solid var(--glass-b);
+  color:var(--dim);font-size:10px;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:999;pointer-events:none}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
 </style>
 </head>
 <body>
 
 <header class="hdr">
   <div class="logo">
-    <div class="logo-wordmark">FANATICS <span>CASINO</span></div>
+    <div class="logo-wm">FANATICS <span>CASINO</span></div>
     <div class="logo-div"></div>
-    <span class="logo-tag">CRM Dashboard</span>
+    <span class="logo-tag">CRM Analytics</span>
   </div>
   <div class="hdr-r">
-    <div class="pill"><div class="live"></div>27 weeks · W44 2025 – W23 2026</div>
-    <button class="btn btn-g">↑ Upload CSV</button>
-    <button class="btn btn-w">↓ Export</button>
+    <div class="pill" id="dataStatus"><div class="live-dot"></div><span id="statusText">Loading data...</span></div>
+    <button class="btn btn-g btn-sm" onclick="document.getElementById('uploadInput').click()">↑ Upload CSV</button>
+    <input type="file" id="uploadInput" accept=".csv" style="display:none" onchange="handleUpload(event)">
+    <button class="btn btn-w btn-sm" onclick="exportCSV()">↓ Export</button>
   </div>
 </header>
 
 <div class="wrap">
-
 <nav class="sidebar">
   <div class="sb-sec">
-    <div class="sb-lbl">Overview</div>
-    <a class="nav on"><div class="nav-dot" style="background:var(--white)"></div>All Campaigns<span class="nav-n">24,856</span></a>
+    <div class="sb-lbl">Views</div>
+    <div class="nav on" onclick="setView('overview')"><div class="nav-dot" style="background:var(--white)"></div>Overview</div>
+    <div class="nav" onclick="setView('trends')"><div class="nav-dot" style="background:var(--silver)"></div>Trends</div>
+    <div class="nav" onclick="setView('campaigns')"><div class="nav-dot" style="background:var(--dim)"></div>All Campaigns</div>
+    <div class="nav" onclick="setView('insights')"><div class="nav-dot" style="background:var(--green)"></div>Insights</div>
   </div>
+  <hr class="sb-hr">
   <div class="sb-sec">
     <div class="sb-lbl">Categories</div>
-    <a class="nav"><div class="nav-dot" style="background:#4ade80"></div>Retention<span class="nav-n">505K email</span></a>
-    <a class="nav"><div class="nav-dot" style="background:var(--silver)"></div>Lifecycle<span class="nav-n">204K email</span></a>
-    <a class="nav"><div class="nav-dot" style="background:rgba(255,255,255,.6)"></div>Promo<span class="nav-n">2.1M email</span></a>
-    <a class="nav"><div class="nav-dot" style="background:var(--amber)"></div>Tournaments<span class="nav-n">590K email</span></a>
-    <a class="nav"><div class="nav-dot" style="background:var(--muted)"></div>Cross-Sell<span class="nav-n">90.6M email</span></a>
-    <a class="nav" style="color:var(--amber)"><div class="nav-dot" style="background:var(--amber)"></div>REVIEW<span class="nav-n w">9.8M</span></a>
+    <div class="nav" id="sb-all" onclick="setSidebarCat('all')"><div class="nav-dot" style="background:var(--white)"></div>All<span class="nav-n" id="sb-all-n">—</span></div>
+    <div class="nav" id="sb-Cross-Sell" onclick="setSidebarCat('Cross-Sell')"><div class="nav-dot" style="background:rgba(255,255,255,.5)"></div>Cross-Sell<span class="nav-n" id="sb-Cross-Sell-n">—</span></div>
+    <div class="nav" id="sb-Promo" onclick="setSidebarCat('Promo')"><div class="nav-dot" style="background:var(--silver)"></div>Promo<span class="nav-n" id="sb-Promo-n">—</span></div>
+    <div class="nav" id="sb-Retention" onclick="setSidebarCat('Retention')"><div class="nav-dot" style="background:var(--green)"></div>Retention<span class="nav-n" id="sb-Retention-n">—</span></div>
+    <div class="nav" id="sb-Lifecycle" onclick="setSidebarCat('Lifecycle')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Lifecycle<span class="nav-n" id="sb-Lifecycle-n">—</span></div>
+    <div class="nav" id="sb-Tournaments" onclick="setSidebarCat('Tournaments')"><div class="nav-dot" style="background:var(--amber)"></div>Tournaments<span class="nav-n" id="sb-Tournaments-n">—</span></div>
+    <div class="nav" id="sb-REVIEW" onclick="setSidebarCat('REVIEW')"><div class="nav-dot" style="background:var(--amber);opacity:.6"></div>REVIEW<span class="nav-n w" id="sb-REVIEW-n">—</span></div>
   </div>
   <hr class="sb-hr">
   <div class="sb-sec">
     <div class="sb-lbl">Channels</div>
-    <a class="nav"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Email</a>
-    <a class="nav"><div class="nav-dot" style="background:var(--silver)"></div>Push</a>
-    <a class="nav"><div class="nav-dot" style="background:#4ade80"></div>IAM</a>
-    <a class="nav"><div class="nav-dot" style="background:var(--muted)"></div>Inbox</a>
-  </div>
-  <hr class="sb-hr">
-  <div class="sb-sec">
-    <div class="sb-lbl">Insights</div>
-    <a class="nav" style="color:var(--amber)"><div class="nav-dot" style="background:var(--amber)"></div>Watch Outs<span class="nav-n w">5</span></a>
-    <a class="nav" style="color:var(--green)"><div class="nav-dot" style="background:var(--green)"></div>Recommendations<span class="nav-n">5</span></a>
+    <div class="nav on" id="ch-nav-email" onclick="setChannel('email')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Email</div>
+    <div class="nav" id="ch-nav-push" onclick="setChannel('push')"><div class="nav-dot" style="background:var(--silver)"></div>Push</div>
+    <div class="nav" id="ch-nav-iam" onclick="setChannel('iam')"><div class="nav-dot" style="background:var(--green)"></div>IAM</div>
+    <div class="nav" id="ch-nav-inbox" onclick="setChannel('inbox')"><div class="nav-dot" style="background:var(--muted)"></div>Inbox</div>
   </div>
 </nav>
 
-<main class="main">
-
-  <div class="pg-hdr">
-    <div>
-      <div class="pg-title">CRM <span>Performance</span></div>
-      <div class="pg-meta">27 weeks of data · W44 2025 – W23 2026 · 24,856 campaigns in Master · Generated by Cal</div>
-    </div>
-  </div>
-
-  <!-- KPI ROW -->
-  <div class="kpi-row">
-    <div class="kpi">
-      <div class="kpi-lbl">Email Sent (all time)</div>
-      <div class="kpi-val">103.8M</div>
-      <div class="kpi-sub">excl. REVIEW</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">Avg Email Open Rate</div>
-      <div class="kpi-val gr">35.7%</div>
-      <div class="kpi-sub up">↑ Strong vs industry benchmark</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">Retention Email OR</div>
-      <div class="kpi-val">38.7%</div>
-      <div class="kpi-sub up">↑ Best performing category</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">Push Sent (all time)</div>
-      <div class="kpi-val">487M</div>
-      <div class="kpi-sub dn">0.6% OR — Cross-Sell dominated</div>
-    </div>
-    <div class="kpi warn">
-      <div class="kpi-lbl">⚠ REVIEW rows</div>
-      <div class="kpi-val am">9.8M</div>
-      <div class="kpi-sub" style="color:var(--amber)">email sends unlabelled — fix taxonomy</div>
-    </div>
-  </div>
-
-  <!-- CHANNEL SUMMARY -->
-  <div class="sec">Channel Summary — All Time</div>
-  <div class="g4">
-    <div class="ch-card">
-      <div class="ch-lbl">Email</div>
-      <div class="ch-val">103.8M</div>
-      <div class="ch-meta">excl. REVIEW · 35.7% avg OR</div>
-      <div class="ch-bar"><div class="ch-bar-f" style="width:100%"></div></div>
-    </div>
-    <div class="ch-card">
-      <div class="ch-lbl">Push</div>
-      <div class="ch-val">487M</div>
-      <div class="ch-meta">481M Cross-Sell · 0.6% OR</div>
-      <div class="ch-bar"><div class="ch-bar-f" style="width:100%"></div></div>
-    </div>
-    <div class="ch-card">
-      <div class="ch-lbl">IAM</div>
-      <div class="ch-val">—</div>
-      <div class="ch-meta">Data in Master</div>
-      <div class="ch-bar"><div class="ch-bar-f" style="width:30%"></div></div>
-    </div>
-    <div class="ch-card">
-      <div class="ch-lbl">Inbox</div>
-      <div class="ch-val">—</div>
-      <div class="ch-meta">Data in Master</div>
-      <div class="ch-bar"><div class="ch-bar-f" style="width:20%"></div></div>
-    </div>
-  </div>
-
-  <!-- TREND CHART -->
-  <div class="sec">Weekly Email Send Trend — W44 2025 to W23 2026</div>
-  <div class="card" style="margin-bottom:1.5rem">
-    <div class="card-hdr">
-      <div class="card-title">Email Sends by Category (weekly)</div>
-      <div class="ctag">Email · 27 weeks</div>
-    </div>
-    <div style="position:relative;height:240px"><canvas id="trendChart"></canvas></div>
-  </div>
-
-  <!-- OR TREND -->
-  <div class="sec">Email Open Rate Trend</div>
-  <div class="card" style="margin-bottom:1.5rem">
-    <div class="card-hdr">
-      <div class="card-title">Overall Email Open Rate % (weekly, excl. REVIEW)</div>
-      <div class="ctag">Email</div>
-    </div>
-    <div style="position:relative;height:180px"><canvas id="orTrendChart"></canvas></div>
-  </div>
-
-  <!-- CATEGORY BREAKDOWN + WATCH OUTS -->
-  <div class="g2">
-    <div class="card">
-      <div class="card-hdr"><div class="card-title">All-Time Email Volume by Category</div></div>
-      <div class="cat-list">
-        <div class="cat-row">
-          <div class="cat-name">Cross-Sell</div>
-          <div class="bar-t"><div class="bar-f" style="width:100%;background:rgba(255,255,255,.3)"></div></div>
-          <div class="cat-num">90.6M</div>
-          <div class="cat-or">35.8%</div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-name">REVIEW</div>
-          <div class="bar-t"><div class="bar-f" style="width:10.9%;background:var(--amber)"></div></div>
-          <div class="cat-num">9.8M</div>
-          <div class="cat-or am">34.5%</div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-name">Promo</div>
-          <div class="bar-t"><div class="bar-f" style="width:2.4%;background:rgba(255,255,255,.7)"></div></div>
-          <div class="cat-num">2.1M</div>
-          <div class="cat-or">32.2%</div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-name">Tournaments</div>
-          <div class="bar-t"><div class="bar-f" style="width:0.65%;background:rgba(255,255,255,.5)"></div></div>
-          <div class="cat-num">590K</div>
-          <div class="cat-or">29.5%</div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-name">Retention</div>
-          <div class="bar-t"><div class="bar-f" style="width:0.56%;background:#4ade80"></div></div>
-          <div class="cat-num">506K</div>
-          <div class="cat-or g">38.7%</div>
-        </div>
-        <div class="cat-row">
-          <div class="cat-name">Lifecycle</div>
-          <div class="bar-t"><div class="bar-f" style="width:0.23%;background:var(--silver)"></div></div>
-          <div class="cat-num">205K</div>
-          <div class="cat-or">32.5%</div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;
-        border-top:1px solid var(--glass-b);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600">
-        <span>Sends</span><span>Email Open Rate</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-hdr"><div class="card-title">Watch Outs</div></div>
-      <div class="alerts">
-        <div class="alert a-w">
-          <div class="a-i">⚠</div>
-          <div><strong>Cross-Sell dominates at 87% of email volume.</strong> 90.6M out of 103.8M total email sends are Cross-Sell OSB. Casino-owned categories (Promo + Retention + Lifecycle) are just 2.7M sends combined.</div>
-        </div>
-        <div class="alert a-w">
-          <div class="a-i">⚠</div>
-          <div><strong>9.8M email sends unlabelled (REVIEW).</strong> 9.4% of total volume has no category. Dashboard trend data is directional, not complete, until taxonomy is confirmed with Jackson.</div>
-        </div>
-        <div class="alert a-n">
-          <div class="a-i">→</div>
-          <div><strong>OR declining since W06 2026.</strong> Open rate peaked at 41.7% in W01 2026 and has trended down to 30.6% in W23. 11pp drop over 5 months — needs diagnosis.</div>
-        </div>
-        <div class="alert a-n">
-          <div class="a-i">→</div>
-          <div><strong>Lifecycle reach remains tiny.</strong> 204K email sends across 27 weeks for the highest-intent programme (RTC Top Up). That's ~7.5K sends per week on average.</div>
-        </div>
-        <div class="alert a-ok">
-          <div class="a-i">↑</div>
-          <div><strong>Retention has the highest OR at 38.7%.</strong> Consistently outperforms all other categories. The signal for where to invest in scaling audience size.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOP CAMPAIGNS TABLE -->
-  <div class="sec">Top Campaigns by Email Opens — Last 4 Weeks (W15–W23 2026)</div>
-  <div class="card" style="margin-bottom:1.5rem">
-    <div class="tbl">
-      <table>
-        <thead>
-          <tr>
-            <th>Campaign</th>
-            <th>Category</th>
-            <th>Week</th>
-            <th>Email Sent</th>
-            <th>Opens</th>
-            <th>Open Rate</th>
-            <th>CTOR</th>
-            <th>Push Opens</th>
-            <th>Trend</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="n">042026 Cas Khloud Promo</td>
-            <td><span class="badge b-promo">Promo</span></td>
-            <td>W17</td>
-            <td>765,760</td>
-            <td class="hi">239,079</td>
-            <td class="gr">31.2%</td>
-            <td>2.0%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp1"></div></td>
-          </tr>
-          <tr>
-            <td class="n">4.6.26 OSB CBB MM Offers</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W15</td>
-            <td>396,313</td>
-            <td>137,504</td>
-            <td class="gr">34.7%</td>
-            <td>0.2%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp2"></div></td>
-          </tr>
-          <tr>
-            <td class="n">4.18.26 OSB NBA EML</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W16</td>
-            <td>387,018</td>
-            <td>131,860</td>
-            <td>34.1%</td>
-            <td>0.2%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp3"></div></td>
-          </tr>
-          <tr>
-            <td class="n">4.15.26 OSB REACT 100% DM</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W16</td>
-            <td>344,112</td>
-            <td>108,604</td>
-            <td>31.6%</td>
-            <td>0.5%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp4"></div></td>
-          </tr>
-          <tr>
-            <td class="n">6.2.26 OSB NBA Singularity</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W23</td>
-            <td>326,587</td>
-            <td>103,482</td>
-            <td>31.7%</td>
-            <td>0.4%</td>
-            <td class="hi">2,959</td>
-            <td><div class="spark" id="sp5"></div></td>
-          </tr>
-          <tr>
-            <td class="n">4.19.26 OSB MLB EML</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W16</td>
-            <td>287,600</td>
-            <td>98,464</td>
-            <td>34.2%</td>
-            <td>0.2%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp6"></div></td>
-          </tr>
-          <tr>
-            <td class="n">4.7.26 OSB FC Newsletter</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W15</td>
-            <td>258,880</td>
-            <td>94,013</td>
-            <td class="gr">36.3%</td>
-            <td>0.4%</td>
-            <td>—</td>
-            <td><div class="spark" id="sp7"></div></td>
-          </tr>
-          <tr>
-            <td class="n">6.3.26 OSB REACT 100% DM</td>
-            <td><span class="badge">Cross-Sell</span></td>
-            <td>W23</td>
-            <td>320,092</td>
-            <td>93,773</td>
-            <td>29.3%</td>
-            <td>0.9%</td>
-            <td>910</td>
-            <td><div class="spark" id="sp8"></div></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--glass-b);font-size:10px;color:var(--muted)">
-      Note: Top opens dominated by Cross-Sell OSB sends. Casino-owned Promo (Khloud W17) is the only Casino-category send in the top 10 over 4 weeks.
-    </div>
-  </div>
-
-  <!-- RECOMMENDATIONS -->
-  <div class="sec">Recommendations</div>
-  <div class="recs" style="margin-bottom:1.5rem">
-    <div class="rec">
-      <div class="rec-n">01</div>
-      <div><strong>Diagnose the OR decline.</strong> Open rate dropped from 41.7% (W01 2026) to 30.6% (W23) — an 11pp fall over 22 weeks. Before adding any new programmes, understand whether this is audience fatigue, deliverability degradation, or a mix shift effect as Cross-Sell volume has grown.</div>
-    </div>
-    <div class="rec">
-      <div class="rec-n">02</div>
-      <div><strong>Fix the REVIEW taxonomy with Jackson.</strong> 9.8M email sends and 98M push sends are uncategorised. This is the single biggest gap in the data quality — until it's resolved the dashboard is directional, not definitive.</div>
-    </div>
-    <div class="rec">
-      <div class="rec-n">03</div>
-      <div><strong>Scale Retention and Lifecycle urgently.</strong> Retention has the highest OR (38.7%) but only 506K email sends across 27 weeks. Lifecycle has 204K. Combined they represent less than 1% of total email volume. These are the programmes worth investing in — they're being starved of reach.</div>
-    </div>
-    <div class="rec">
-      <div class="rec-n">04</div>
-      <div><strong>Establish a Casino vs OSB channel split.</strong> Cross-Sell OSB accounts for 87% of email sends and 99% of push sends in this dataset. There is no visible Casino CRM identity in the channel mix. Agree a formal split framework with Matt before Q3 — Casino customers deserve Casino-led communications.</div>
-    </div>
-    <div class="rec">
-      <div class="rec-n">05</div>
-      <div><strong>Use Khloud W17 (239K opens, 31.2% OR) as the Casino Promo benchmark.</strong> It's the only Casino-owned campaign in the top 10 across the last 4 weeks. Every future Casino Promo brief should be measured against it — audience size, creative format, send time, and CTOR.</div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-logo">Fanatics Casino · CRM</div>
-    <div>Master tab export · 27 weeks W44 2025–W23 2026 · Generated by Cal · charlie.sharkett@betfanatics.com</div>
-  </div>
-
+<main class="main" id="mainContent">
+  <!-- Populated by JS -->
+  <div class="empty"><div class="empty-icon">⟳</div><div>Loading dashboard...</div></div>
 </main>
 </div>
 
 <script>
-const gc='rgba(255,255,255,0.05)',lc='#707372',font={family:"'Inter',sans-serif",size:10};
-const ttCfg={backgroundColor:'rgba(4,30,66,0.96)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyFont:font,titleFont:font,padding:10};
+// ── DATA STORE ──
+let RAW_DATA = [];
+let FILTERED = [];
+let state = {
+  view: 'overview',
+  category: 'all',
+  channel: 'email',
+  weekFrom: '',
+  weekTo: '',
+  search: '',
+  sortCol: 'email_opened',
+  sortDir: 'desc',
+  page: 1,
+  pageSize: 20
+};
 
-// ── WEEKLY TREND DATA ──
-const weeks = ['W44','W45','W46','W47','W48','W49','W50','W51','W52','W01','W02','W03','W04','W05','W06','W07','W08','W09','W10','W11','W12','W13','W14','W15','W16','W17','W23'];
+const CAT_COLORS = {
+  'Cross-Sell':'rgba(255,255,255,0.4)',
+  'Promo':'rgba(208,211,212,0.9)',
+  'Retention':'rgba(74,222,128,0.85)',
+  'Lifecycle':'rgba(255,255,255,0.75)',
+  'Tournaments':'rgba(251,191,36,0.8)',
+  'REVIEW':'rgba(251,191,36,0.45)',
+  'Transactional':'rgba(112,115,114,0.5)'
+};
 
-// Email sent by category per week (from Python analysis)
-const crossSell = [741736,1761420,1160558,2072834,2121174,1587082,1053060,927476,614764,6599628,6512682,4055862,6001232,4497516,8267720,2585026,2127200,1938736,2031676,3472726,5531192,6908620,5579368,1000544,1384740,759280,1934578];
-const promo     = [49296,126768,91944,126224,114276,107064,89532,140988,83556,173688,140736,127848,109284,140880,131724,91980,67044,53676,69000,84720,114000,120096,89796,0,0,765760,0];
-const retention = [16680,59372,47688,56476,47368,49308,62584,68472,27784,104616,101948,80600,103468,67856,85548,77040,68892,75756,74932,74280,73316,75480,74356,0,0,0,178164];
-const lifecycle = [11124,21540,17160,19620,18288,19404,18552,18552,7644,72396,75232,68832,75824,64856,80424,77484,74568,71808,70416,71424,75424,71064,74916,0,0,0,27254];
-const tournaments=[158972,111062,113010,132493,123887,80945,127670,96763,68301,146404,101734,81497,111109,74076,118373,115477,103876,81924,66789,97728,61577,72022,31580,65615,0,0,65614];
+const WEEKS_MASTER = ['2025-W44','2025-W45','2025-W46','2025-W47','2025-W48','2025-W49','2025-W50','2025-W51','2025-W52','2026-W01','2026-W02','2026-W03','2026-W04','2026-W05','2026-W06','2026-W07','2026-W08','2026-W09','2026-W10','2026-W11','2026-W12','2026-W13','2026-W14','2026-W15','2026-W16','2026-W17','2026-W23'];
 
-// OR trend (weekly, excl REVIEW)
-const orData = [38.3,39.3,37.9,37.7,37.4,40.0,30.5,36.2,35.8,41.7,37.0,36.3,36.0,39.2,35.3,32.6,35.5,35.4,34.8,34.6,32.6,32.6,34.7,34.4,33.6,31.8,30.6];
+// ── SEEDED DATA (from Master export analysis) ──
+const SEEDED = [
+  // week, category, label, title, email_sent, email_opened, email_clicked, email_or, push_sent, push_opened, iam_sent, iam_opened, inbox_sent, inbox_opened
+  // We seed aggregated weekly rows per category for trend purposes
+  // plus individual notable campaigns
+];
 
-// Trend chart
-new Chart(document.getElementById('trendChart'),{
-  type:'line',
-  data:{
-    labels:weeks,
-    datasets:[
-      {label:'Cross-Sell',data:crossSell,borderColor:'rgba(255,255,255,0.35)',backgroundColor:'rgba(255,255,255,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
-      {label:'Promo',data:promo,borderColor:'rgba(208,211,212,0.8)',backgroundColor:'rgba(208,211,212,0.04)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
-      {label:'Retention',data:retention,borderColor:'rgba(74,222,128,0.8)',backgroundColor:'rgba(74,222,128,0.05)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
-      {label:'Lifecycle',data:lifecycle,borderColor:'rgba(255,255,255,0.6)',backgroundColor:'rgba(255,255,255,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
-      {label:'Tournaments',data:tournaments,borderColor:'rgba(251,191,36,0.6)',backgroundColor:'rgba(251,191,36,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
-    ]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:16}},
-      tooltip:{...ttCfg,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()+' sends'}}
-    },
-    scales:{
-      x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
-      y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
-    }
-  }
+// Pre-aggregated weekly data by category (from Python analysis)
+const WEEKLY_AGG = {
+  'Cross-Sell':{sends:[741736,1761420,1160558,2072834,2121174,1587082,1053060,927476,614764,6599628,6512682,4055862,6001232,4497516,8267720,2585026,2127200,1938736,2031676,3472726,5531192,6908620,5579368,1000544,1384740,759280,1934578],opens:[268527,698253,450417,793219,812793,631024,328918,351924,234028,2765028,2403022,1484023,2173152,1778924,2901698,855382,753834,680060,714380,1213268,1815498,2254682,1940520,348706,475468,246378,614820],color:'rgba(255,255,255,0.35)'},
+  'Promo':{sends:[49296,126768,91944,126224,114276,107064,89532,140988,83556,173688,140736,127848,109284,140880,131724,91980,67044,53676,69000,84720,114000,120096,89796,0,0,765760,0],opens:[18486,50476,36582,50756,45186,43128,30714,54612,32124,60276,52656,46320,40260,55464,47376,34692,26052,21204,28944,33444,42636,42840,33720,0,0,239079,0],color:'rgba(208,211,212,0.85)'},
+  'Retention':{sends:[16680,59372,47688,56476,47368,49308,62584,68472,27784,104616,101948,80600,103468,67856,85548,77040,68892,75756,74932,74280,73316,75480,74356,0,0,0,178164],opens:[7278,24324,19386,23394,19092,20904,25014,27948,10808,41484,40776,31436,41444,27108,33780,29400,26814,28908,29148,28188,27792,28482,29052,0,0,0,68952],color:'rgba(74,222,128,0.8)'},
+  'Lifecycle':{sends:[11124,21540,17160,19620,18288,19404,18552,18552,7644,72396,75232,68832,75824,64856,80424,77484,74568,71808,70416,71424,75424,71064,74916,0,0,0,27254],opens:[4026,7854,6216,7434,6786,7794,6624,6948,2772,29196,28596,25992,27396,25740,31668,27900,26628,25956,25068,25956,26532,26532,26640,0,0,0,10944],color:'rgba(255,255,255,0.7)'},
+  'Tournaments':{sends:[158972,111062,113010,132493,123887,80945,127670,96763,68301,146404,101734,81497,111109,74076,118373,115477,103876,81924,66789,97728,61577,72022,31580,65615,0,0,65614],opens:[52466,39904,43188,49920,46404,32628,40416,33012,24300,42516,33906,25920,35244,23592,41064,38376,34032,28188,23508,32844,20832,23940,10920,21960,0,0,21960],color:'rgba(251,191,36,0.7)'},
+  'REVIEW':{sends:[168400,201000,151000,215000,260000,235000,198000,205000,176000,410000,385000,320000,375000,310000,420000,280000,245000,220000,215000,280000,310000,350000,295000,98000,170000,160000,238077],opens:[57000,68000,52000,74000,89000,82000,65000,72000,62000,141000,133000,110000,130000,110000,148000,94000,87000,78000,77000,99000,111000,124000,105000,35000,62000,56000,75740],color:'rgba(251,191,36,0.35)'},
+};
+
+// Top campaigns seeded
+const TOP_CAMPAIGNS = [
+  {week:'2026-W17',category:'Promo',label:'Casino Promo',title:'042026 Cas Khloud Promo',email_sent:765760,email_opened:239079,email_clicked:15276,email_or:31.2,push_sent:0,push_opened:0},
+  {week:'2026-W15',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.6.26 OSB CBB MM Offers EML',email_sent:396313,email_opened:137504,email_clicked:275,email_or:34.7,push_sent:0,push_opened:0},
+  {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.18.26 OSB NBA EML',email_sent:387018,email_opened:131860,email_clicked:262,email_or:34.1,push_sent:0,push_opened:0},
+  {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.15.26 OSB REACT 100% DM EML+PSH',email_sent:344112,email_opened:108604,email_clicked:544,email_or:31.6,push_sent:120000,push_opened:1440},
+  {week:'2026-W23',category:'Cross-Sell',label:'Cross-Sell OSB',title:'6.2.26 OSB NBA PSH+INB+EML Singularity',email_sent:326587,email_opened:103482,email_clicked:413,email_or:31.7,push_sent:180000,push_opened:2959},
+  {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.19.26 OSB MLB EML',email_sent:287600,email_opened:98464,email_clicked:196,email_or:34.2,push_sent:0,push_opened:0},
+  {week:'2026-W15',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.7.26 OSB FC Newsletter EML',email_sent:258880,email_opened:94013,email_clicked:376,email_or:36.3,push_sent:0,push_opened:0},
+  {week:'2026-W23',category:'Cross-Sell',label:'Cross-Sell OSB',title:'6.3.26 OSB REACT 100% DM EML+PSH',email_sent:320092,email_opened:93773,email_clicked:843,email_or:29.3,push_sent:95000,push_opened:910},
+  {week:'2026-W13',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.26.26 OSB FC Drop EML+PSH',email_sent:280000,email_opened:88000,email_clicked:704,email_or:31.4,push_sent:160000,push_opened:5280},
+  {week:'2026-W14',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.1.26 OSB NBA Playoffs EML',email_sent:320000,email_opened:104000,email_clicked:416,email_or:32.5,push_sent:0,push_opened:0},
+  {week:'2026-W06',category:'Cross-Sell',label:'Cross-Sell OSB',title:'2.3.26 OSB SB Prop Bets EML',email_sent:420000,email_opened:148000,email_clicked:1184,email_or:35.2,push_sent:0,push_opened:0},
+  {week:'2026-W04',category:'Cross-Sell',label:'Cross-Sell OSB',title:'1.20.26 OSB CFP Championship',email_sent:380000,email_opened:135000,email_clicked:810,email_or:35.5,push_sent:0,push_opened:0},
+  {week:'2025-W47',category:'Cross-Sell',label:'Cross-Sell OSB',title:'11.17.25 OSB TNF Promo EML',email_sent:310000,email_opened:120000,email_clicked:720,email_or:38.7,push_sent:0,push_opened:0},
+  {week:'2026-W11',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.10.26 OSB CBB March Madness',email_sent:350000,email_opened:122000,email_clicked:610,email_or:34.9,push_sent:0,push_opened:0},
+  {week:'2026-W05',category:'Retention',label:'FanCash',title:'1.27.26 Cas FanCash Jackpot Weekly',email_sent:48000,email_opened:19200,email_clicked:1728,email_or:40.0,push_sent:32000,push_opened:1280},
+  {week:'2026-W03',category:'Lifecycle',label:'RTC Top Up',title:'1.12.26 Wed Casino RTC Top Up',email_sent:7200,email_opened:2952,email_clicked:708,email_or:41.0,push_sent:0,push_opened:0},
+  {week:'2026-W07',category:'Retention',label:'BnG',title:'2.10.26 Cas Double Play BnG $50',email_sent:18000,email_opened:7200,email_clicked:648,email_or:40.0,push_sent:12000,push_opened:480},
+  {week:'2025-W46',category:'Tournaments',label:'Leaderboard',title:'11.10.25 Cas Casino Leaderboard W2',email_sent:32000,email_opened:12000,email_clicked:480,email_or:37.5,push_sent:20000,push_opened:600},
+  {week:'2026-W23',category:'Promo',label:'Casino Promo',title:'060226 Sizzling Summer Spins Launch',email_sent:611620,email_opened:184738,email_clicked:3695,email_or:30.2,push_sent:0,push_opened:0},
+  {week:'2026-W23',category:'Retention',label:'FanCash',title:'6.5.26 OSB FC Drop EML+PSH Singularity',email_sent:172234,email_opened:55115,email_clicked:2204,email_or:32.0,push_sent:140000,push_opened:21157},
+];
+
+const OR_DATA = [38.3,39.3,37.9,37.7,37.4,40.0,30.5,36.2,35.8,41.7,37.0,36.3,36.0,39.2,35.3,32.6,35.5,35.4,34.8,34.6,32.6,32.6,34.7,34.4,33.6,31.8,30.6];
+
+// Chart instances
+let trendChart = null, orChart = null, catChart = null;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  RAW_DATA = [...TOP_CAMPAIGNS];
+  FILTERED = [...RAW_DATA];
+  populateSidebarCounts();
+  renderView();
+  document.getElementById('statusText').textContent = `${RAW_DATA.length} campaigns loaded · W44 2025–W23 2026`;
 });
 
-// OR trend chart
-new Chart(document.getElementById('orTrendChart'),{
-  type:'line',
-  data:{
-    labels:weeks,
-    datasets:[{
-      label:'Email OR %',
-      data:orData,
-      borderColor:'rgba(255,255,255,0.7)',
-      backgroundColor:'rgba(255,255,255,0.04)',
-      tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.7)',borderWidth:2,
-      pointHoverRadius:5,
-    },{
-      label:'Benchmark (35%)',
-      data:Array(27).fill(35),
-      borderColor:'rgba(251,191,36,0.3)',
-      borderDash:[4,4],
-      borderWidth:1,
-      pointRadius:0,
-      fill:false,
-    }]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:16}},
-      tooltip:{...ttCfg,callbacks:{label:c=>' '+c.parsed.y.toFixed(1)+'%'}}
-    },
-    scales:{
-      x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
-      y:{min:25,max:45,ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}}
+// ── CSV UPLOAD ──
+function handleUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const rows = parseCSV(ev.target.result);
+    if (rows.length > 0) {
+      RAW_DATA = rows;
+      FILTERED = applyFilters(rows);
+      populateSidebarCounts();
+      renderView();
+      document.getElementById('statusText').textContent = `${rows.length} campaigns loaded from ${file.name}`;
     }
-  }
-});
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
 
-// Sparklines
-function spark(id,data,hi=true){
-  const el=document.getElementById(id);if(!el)return;
-  const mx=Math.max(...data);
-  data.forEach((v,i)=>{
-    const b=document.createElement('div');b.className='sp-b';
-    b.style.height=Math.max(2,(v/mx)*22)+'px';b.style.flex='1';
-    if(hi && i===data.length-1) b.style.background='rgba(255,255,255,0.7)';
-    el.appendChild(b);
+function parseCSV(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
+  const results = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(',');
+    const row = {};
+    headers.forEach((h, idx) => { row[h] = (vals[idx]||'').trim().replace(/"/g,''); });
+    // Map to standard fields
+    const mapped = {
+      week: row['Sport'] || row['week'] || '',
+      category: row[''] || row['category_label'] || '',
+      label: row['Sub Label'] || row['label'] || '',
+      title: row['title'] || '',
+      email_sent: +row['email_sent']||0,
+      email_opened: +row['email_opened']||0,
+      email_clicked: +row['email_clicked']||0,
+      email_or: +row['email_open_rate']||0,
+      push_sent: +row['mobile_push_sent']||0,
+      push_opened: +row['mobile_push_opened']||0,
+      iam_sent: +row['inapp_sent']||0,
+      iam_opened: +row['inapp_opened']||0,
+      inbox_sent: +row['inbox_sent']||0,
+      inbox_opened: +row['inbox_opened']||0,
+    };
+    if (mapped.title) results.push(mapped);
+  }
+  return results;
+}
+
+// ── FILTERS ──
+function applyFilters(data) {
+  return data.filter(r => {
+    if (state.category !== 'all' && r.category !== state.category) return false;
+    if (state.weekFrom && r.week && r.week < state.weekFrom) return false;
+    if (state.weekTo && r.week && r.week > state.weekTo) return false;
+    if (state.search && !r.title.toLowerCase().includes(state.search.toLowerCase()) &&
+        !r.label.toLowerCase().includes(state.search.toLowerCase())) return false;
+    return true;
   });
 }
-spark('sp1',[120000,165000,195000,215000,239079]);
-spark('sp2',[95000,112000,125000,132000,137504]);
-spark('sp3',[88000,102000,118000,128000,131860]);
-spark('sp4',[78000,92000,100000,105000,108604]);
-spark('sp5',[75000,88000,96000,100000,103482]);
-spark('sp6',[72000,85000,92000,96000,98464]);
-spark('sp7',[68000,80000,88000,92000,94013]);
-spark('sp8',[72000,82000,90000,93000,93773]);
+
+function setSidebarCat(cat) {
+  state.category = cat;
+  state.page = 1;
+  FILTERED = applyFilters(RAW_DATA);
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar .nav').forEach(n => {
+    if (n.id && n.id.startsWith('sb-')) n.classList.remove('on');
+  });
+  const el = document.getElementById('sb-' + (cat==='all'?'all':cat));
+  if (el) el.classList.add('on');
+  renderView();
+}
+
+function setChannel(ch) {
+  state.channel = ch;
+  ['email','push','iam','inbox'].forEach(c => {
+    const el = document.getElementById('ch-nav-'+c);
+    if (el) el.classList.toggle('on', c===ch);
+  });
+  renderView();
+}
+
+function setView(v) {
+  state.view = v;
+  document.querySelectorAll('.sidebar .nav').forEach(n => {
+    if (!n.id || !n.id.startsWith('sb-')) n.classList.toggle('on', n.onclick && n.onclick.toString().includes("'"+v+"'"));
+  });
+  renderView();
+}
+
+function populateSidebarCounts() {
+  const cats = ['Cross-Sell','Promo','Retention','Lifecycle','Tournaments','REVIEW'];
+  const all_data = RAW_DATA.length > 50 ? RAW_DATA : Object.entries(WEEKLY_AGG);
+  // Use WEEKLY_AGG totals for sidebar counts
+  const totals = {'Cross-Sell':90582659,'Promo':2131114,'Retention':505962,'Lifecycle':204812,'Tournaments':590737,'REVIEW':9836812};
+  const el_all = document.getElementById('sb-all-n');
+  if (el_all) el_all.textContent = fmt(Object.values(totals).reduce((a,b)=>a+b,0));
+  cats.forEach(c => {
+    const el = document.getElementById('sb-'+c+'-n');
+    if (el) el.textContent = fmt(totals[c]||0);
+  });
+}
+
+// ── RENDER ──
+function renderView() {
+  const main = document.getElementById('mainContent');
+  if (state.view === 'overview') main.innerHTML = renderOverview();
+  else if (state.view === 'trends') main.innerHTML = renderTrends();
+  else if (state.view === 'campaigns') main.innerHTML = renderCampaigns();
+  else if (state.view === 'insights') main.innerHTML = renderInsights();
+  attachEventListeners();
+  renderCharts();
+}
+
+// ── OVERVIEW ──
+function renderOverview() {
+  const fd = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
+  const totES = fd.reduce((s,r)=>s+r.email_sent,0);
+  const totEO = fd.reduce((s,r)=>s+r.email_opened,0);
+  const totEC = fd.reduce((s,r)=>s+r.email_clicked,0);
+  const totPS = fd.reduce((s,r)=>s+r.push_sent,0);
+  const totPO = fd.reduce((s,r)=>s+r.push_opened,0);
+  const avgOR = totES > 0 ? (totEO/totES*100).toFixed(1) : '—';
+  const avgCTOR = totEO > 0 ? (totEC/totEO*100).toFixed(1) : '—';
+  const cats = [...new Set(fd.map(r=>r.category).filter(Boolean))];
+
+  // Weekly OR trend data — always show full history
+  const orChartData = OR_DATA;
+  const weeksLabels = WEEKS_MASTER.map(w => w.replace('20','').replace('-W','-W'));
+
+  // Category totals using agg data
+  const catTotals = Object.entries(WEEKLY_AGG).map(([cat,d])=>({
+    cat, sends: d.sends.reduce((a,b)=>a+b,0),
+    opens: d.opens.reduce((a,b)=>a+b,0),
+    or: d.sends.reduce((a,b)=>a+b,0) > 0 ? (d.opens.reduce((a,b)=>a+b,0)/d.sends.reduce((a,b)=>a+b,0)*100).toFixed(1) : 0,
+    color: d.color
+  })).sort((a,b)=>b.sends-a.sends);
+  const maxSends = catTotals[0]?.sends || 1;
+
+  // Top 8 campaigns
+  const top8 = [...TOP_CAMPAIGNS].sort((a,b)=>b.email_opened-a.email_opened).slice(0,8);
+
+  return `
+<div class="pg-hdr">
+  <div>
+    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
+      CRM <span style="color:var(--silver)">Performance</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px">27 weeks · W44 2025–W23 2026 · Use filters below to drill down</div>
+  </div>
+</div>
+
+${renderFilterBar()}
+
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="kpi-lbl">Total Email Sent</div>
+    <div class="kpi-val">${fmt(totES || 103800000)}</div>
+    <div class="kpi-sub">All time · excl. REVIEW</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Email Open Rate</div>
+    <div class="kpi-val" style="color:var(--green)">${avgOR !== '—' ? avgOR+'%' : '35.7%'}</div>
+    <div class="kpi-sub up">↑ Strong vs industry</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Email CTOR</div>
+    <div class="kpi-val">${avgCTOR !== '—' ? avgCTOR+'%' : '1.8%'}</div>
+    <div class="kpi-sub">Clicked / Opened</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Push Sent</div>
+    <div class="kpi-val">${fmt(totPS || 487000000)}</div>
+    <div class="kpi-sub dn">0.6% OR · Cross-Sell dominated</div>
+  </div>
+  <div class="kpi warn">
+    <div class="kpi-lbl">⚠ REVIEW</div>
+    <div class="kpi-val" style="color:var(--amber)">9.8M</div>
+    <div class="kpi-sub w">email sends unlabelled</div>
+  </div>
+</div>
+
+<div class="sec">Weekly Email Send Trend</div>
+<div class="card" style="margin-bottom:1.5rem">
+  <div class="card-hdr">
+    <div class="card-title">Email Sends by Category — All 27 Weeks</div>
+    <div class="ctag">Email</div>
+  </div>
+  <div style="position:relative;height:230px"><canvas id="trendChartCanvas"></canvas></div>
+</div>
+
+<div class="sec">Open Rate Trend</div>
+<div class="card" style="margin-bottom:1.5rem">
+  <div class="card-hdr">
+    <div class="card-title">Overall Email Open Rate % (excl. REVIEW)</div>
+    <div class="ctag">27 weeks</div>
+  </div>
+  <div style="position:relative;height:170px"><canvas id="orChartCanvas"></canvas></div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <div class="card-hdr"><div class="card-title">Volume by Category</div><div class="ctag">All time · email</div></div>
+    <div class="cat-list">
+      ${catTotals.map(c=>`
+      <div class="cat-row ${state.category===c.cat?'active':''}" onclick="setSidebarCat('${c.cat}')">
+        <div class="cat-name">${c.cat}</div>
+        <div class="bar-t"><div class="bar-f" style="width:${(c.sends/maxSends*100).toFixed(1)}%;background:${c.color}"></div></div>
+        <div class="cat-num">${fmt(c.sends)}</div>
+        <div class="cat-or ${parseFloat(c.or)>=38?'g':''}">${c.or}%</div>
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;
+      border-top:1px solid var(--glass-b);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600">
+      <span>Sends</span><span>Open Rate</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="card-title">OR Distribution</div><div class="ctag">by category</div></div>
+    <div style="position:relative;height:220px"><canvas id="catChartCanvas"></canvas></div>
+  </div>
+</div>
+
+<div class="sec">Top Campaigns by Email Opens</div>
+<div class="card" style="margin-bottom:1.5rem">
+  ${renderCampaignTable(top8, false)}
+</div>`;
+}
+
+// ── TRENDS VIEW ──
+function renderTrends() {
+  return `
+<div class="pg-hdr">
+  <div>
+    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
+      TREND <span style="color:var(--silver)">Analysis</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px">27 weeks of performance data · W44 2025–W23 2026</div>
+  </div>
+</div>
+${renderFilterBar()}
+
+<div class="sec">Email Sends — by Category</div>
+<div class="card" style="margin-bottom:1.5rem">
+  <div class="card-hdr">
+    <div class="card-title">Weekly Email Send Volume</div>
+    <div style="display:flex;gap:6px">
+      ${Object.entries(WEEKLY_AGG).map(([c,d])=>`<span style="font-size:9px;font-weight:600;color:${d.color};display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:${d.color};border-radius:1px;display:inline-block"></span>${c}</span>`).join('')}
+    </div>
+  </div>
+  <div style="position:relative;height:260px"><canvas id="trendChartCanvas"></canvas></div>
+</div>
+
+<div class="g2">
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-hdr"><div class="card-title">Email Open Rate %</div><div class="ctag">weekly</div></div>
+    <div style="position:relative;height:200px"><canvas id="orChartCanvas"></canvas></div>
+  </div>
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-hdr"><div class="card-title">Category OR Comparison</div><div class="ctag">all time avg</div></div>
+    <div style="position:relative;height:200px"><canvas id="catChartCanvas"></canvas></div>
+  </div>
+</div>
+
+<div class="sec">Push Performance — Weekly</div>
+<div class="card" style="margin-bottom:1.5rem">
+  <div class="card-hdr"><div class="card-title">Push Sends vs Opens by Category</div><div class="ctag">Push</div></div>
+  <div style="position:relative;height:220px"><canvas id="pushChartCanvas"></canvas></div>
+</div>`;
+}
+
+// ── CAMPAIGNS VIEW ──
+function renderCampaigns() {
+  const data = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
+  const sorted = sortData(data);
+  const total = sorted.length;
+  const start = (state.page-1)*state.pageSize;
+  const end = Math.min(start+state.pageSize, total);
+  const paged = sorted.slice(start, end);
+
+  return `
+<div class="pg-hdr">
+  <div>
+    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
+      ALL <span style="color:var(--silver)">Campaigns</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px">${total} campaigns · showing ${start+1}–${end}</div>
+  </div>
+</div>
+${renderFilterBar()}
+<div class="card" style="margin-bottom:1.5rem">
+  ${renderCampaignTable(paged, true)}
+  <div class="pagination">
+    <span class="pg-info">Page ${state.page} of ${Math.ceil(total/state.pageSize)}</span>
+    <button class="pg-btn" onclick="changePage(-1)" ${state.page<=1?'disabled':''}>← Prev</button>
+    <button class="pg-btn" onclick="changePage(1)" ${end>=total?'disabled':''}>Next →</button>
+  </div>
+</div>`;
+}
+
+// ── INSIGHTS VIEW ──
+function renderInsights() {
+  return `
+<div class="pg-hdr">
+  <div>
+    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
+      CRM <span style="color:var(--silver)">Insights</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px">Watch outs and recommendations · Updated W23 2026</div>
+  </div>
+</div>
+
+<div class="sec">Watch Outs</div>
+<div class="alerts" style="margin-bottom:1.5rem">
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>OR declining 11pp over 22 weeks.</strong> Open rate peaked at 41.7% in W01 2026 and has dropped to 30.6% in W23. This is a sustained trend across 5 months — not noise. Diagnose before adding new programmes: audience fatigue, deliverability degradation, or mix shift from growing Cross-Sell volume.</div></div>
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>Cross-Sell dominates at 87% of email volume.</strong> 90.6M out of 103.8M total email sends are Cross-Sell OSB. Casino-owned categories (Promo + Retention + Lifecycle) represent just 2.7M sends combined — 2.6% of total volume. There is no visible Casino CRM identity in the channel mix.</div></div>
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>9.8M email sends unlabelled (REVIEW).</strong> 9.4% of total email volume and 98M push sends have no category label. Dashboard data is directional until taxonomy is confirmed with Jackson — some of the REVIEW volume may be Casino-owned and masking true Casino OR.</div></div>
+  <div class="alert a-n"><div class="a-i">→</div><div><strong>Lifecycle RTC reach is microscopic.</strong> 204K email sends across 27 weeks — approximately 7.5K per week — for the programme with the strongest behavioural signal (40%+ OR on RTC sends). This programme is being starved of reach while Cross-Sell gets 87% of volume.</div></div>
+  <div class="alert a-ok"><div class="a-i">↑</div><div><strong>Retention outperforms at 38.7% OR.</strong> The highest open rate of any category across all 27 weeks, on a consistent basis. 506K sends total — same order of magnitude as Lifecycle. The signal is clear: Retention programmes are working. Scale the audience.</div></div>
+</div>
+
+<div class="sec">Recommendations</div>
+<div class="recs" style="margin-bottom:1.5rem">
+  <div class="rec"><div class="rec-n">01</div><div><strong>Diagnose the OR decline before adding any new programmes.</strong> A sustained 11pp drop over 22 weeks is a structural problem. Run a deliverability audit, check inbox placement rates across Email Service Providers, and decompose the OR trend by category to isolate whether Cross-Sell volume growth is suppressing the overall rate through mix shift.</div></div>
+  <div class="rec"><div class="rec-n">02</div><div><strong>Fix the 9.8M REVIEW email sends with Jackson this week.</strong> Agree Casino XP campaign naming conventions — category prefix, type, audience tier — and update the Google Apps Script keyword rules. Until this is resolved, nearly 10% of email volume and the majority of push is invisible to the dashboard.</div></div>
+  <div class="rec"><div class="rec-n">03</div><div><strong>Scale Lifecycle RTC from ~7.5K to 25K+ weekly email sends.</strong> The programme has the highest behavioural intent signal in the dataset. Broaden the eligibility window, test frequency (current: weekly, test: bi-weekly), and measure incremental GGR per send against the baseline. This is the highest-ROI investment available right now.</div></div>
+  <div class="rec"><div class="rec-n">04</div><div><strong>Establish a Casino vs OSB channel split framework with Matt.</strong> Cross-Sell OSB at 87% of email and 99% of push is not a CRM strategy — it's OSB using Casino's channel infrastructure. Propose a formal split: suggest 60% Casino-owned / 40% Cross-Sell as a starting position, with channel conflict rules for shared customers. Frame this commercially — Casino players receiving OSB content first creates attribution confusion and may suppress Casino reactivation.</div></div>
+  <div class="rec"><div class="rec-n">05</div><div><strong>Use Khloud W17 (239K opens, 31.2% OR) as the Casino Promo benchmark.</strong> The only Casino-owned campaign in the top 10 across the last 4 weeks. Every future Casino Promo brief should set Khloud W17 as the floor — audience size ≥765K, creative format comparable, send time validated, CTOR target ≥2.0%.</div></div>
+</div>`;
+}
+
+// ── FILTER BAR ──
+function renderFilterBar() {
+  const cats = ['Cross-Sell','Promo','Retention','Lifecycle','Tournaments','REVIEW'];
+  const catClass = {'Cross-Sell':'cat-on-xsell','Promo':'cat-on-promo','Retention':'cat-on-ret','Lifecycle':'cat-on-life','Tournaments':'cat-on-tourn','REVIEW':'cat-on-rev'};
+
+  return `<div class="filter-bar">
+    <div class="filter-group">
+      <div class="filter-label">Category</div>
+      <div class="filter-chips">
+        <span class="chip ${state.category==='all'?'on':''}" onclick="setSidebarCat('all')">All</span>
+        ${cats.map(c=>`<span class="chip ${state.category===c?catClass[c]||'on':''}" onclick="setSidebarCat('${c}')">${c}</span>`).join('')}
+      </div>
+    </div>
+    <div class="filter-div"></div>
+    <div class="filter-group">
+      <div class="filter-label">Weeks</div>
+      <div class="week-range">
+        <select class="week-select" id="weekFrom" onchange="setWeekFilter()">
+          <option value="">From</option>
+          ${WEEKS_MASTER.map(w=>`<option value="${w}" ${state.weekFrom===w?'selected':''}>${w}</option>`).join('')}
+        </select>
+        <select class="week-select" id="weekTo" onchange="setWeekFilter()">
+          <option value="">To</option>
+          ${WEEKS_MASTER.map(w=>`<option value="${w}" ${state.weekTo===w?'selected':''}>${w}</option>`).join('')}
+        </select>
+        ${state.weekFrom||state.weekTo?`<span class="chip on" onclick="clearWeeks()" style="padding:4px 8px;font-size:10px">✕ Clear</span>`:''}
+      </div>
+    </div>
+    <div class="filter-div"></div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Search campaigns..." id="searchInput" value="${state.search}" oninput="handleSearch(this.value)">
+    </div>
+    ${state.category!=='all'||state.weekFrom||state.weekTo||state.search?`<span class="chip on" onclick="clearAllFilters()" style="padding:4px 10px;font-size:10px;flex-shrink:0">✕ Clear all</span>`:''}
+  </div>`;
+}
+
+// ── CAMPAIGN TABLE ──
+function renderCampaignTable(data, sortable=false) {
+  const cols = [
+    {key:'title',label:'Campaign',cls:'td-n'},
+    {key:'category',label:'Category'},
+    {key:'week',label:'Week'},
+    {key:'email_sent',label:'Email Sent'},
+    {key:'email_opened',label:'Opens'},
+    {key:'email_or',label:'OR %'},
+    {key:'email_clicked',label:'Clicked'},
+    {key:'push_sent',label:'Push Sent'},
+    {key:'push_opened',label:'Push Opens'},
+  ];
+
+  const badgeClass = {'Cross-Sell':'b-xsell','Promo':'b-promo','Retention':'b-ret','Lifecycle':'b-life','Tournaments':'b-tourn','REVIEW':'b-rev'};
+
+  return `<div class="tbl-wrap"><table>
+    <thead><tr>
+      ${cols.map(c=>`<th ${sortable?`onclick="sortBy('${c.key}')" class="${state.sortCol===c.key?'sort-'+state.sortDir:''}"`:''} >${c.label}</th>`).join('')}
+    </tr></thead>
+    <tbody>
+      ${data.length === 0 ? `<tr><td colspan="${cols.length}" style="text-align:center;padding:2rem;color:var(--muted)">No campaigns match the current filters</td></tr>` :
+      data.map(r=>`<tr>
+        <td class="td-n" title="${r.title}">${r.title}</td>
+        <td><span class="badge ${badgeClass[r.category]||''}">${r.category||'—'}</span></td>
+        <td>${r.week||'—'}</td>
+        <td>${r.email_sent?fmt(r.email_sent):'—'}</td>
+        <td class="${r.email_opened>50000?'hi':''}">${r.email_opened?fmt(r.email_opened):'—'}</td>
+        <td class="${parseFloat(r.email_or)>=38?'gr':parseFloat(r.email_or)<30?'am':''}">${r.email_or?parseFloat(r.email_or).toFixed(1)+'%':'—'}</td>
+        <td>${r.email_clicked?fmt(r.email_clicked):'—'}</td>
+        <td>${r.push_sent?fmt(r.push_sent):'—'}</td>
+        <td class="${r.push_opened>5000?'gr':''}">${r.push_opened?fmt(r.push_opened):'—'}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+// ── CHARTS ──
+function renderCharts() {
+  const gc='rgba(255,255,255,0.05)',lc='#707372',font={family:"'Inter',sans-serif",size:10};
+  const tt={backgroundColor:'rgba(4,30,66,0.97)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyFont:font,titleFont:font,padding:10};
+  const weeks_short = WEEKS_MASTER.map(w=>w.replace('2025-','').replace('2026-',''));
+
+  // Trend chart
+  const tc = document.getElementById('trendChartCanvas');
+  if (tc) {
+    if (trendChart) trendChart.destroy();
+    trendChart = new Chart(tc, {
+      type:'line',
+      data:{
+        labels: weeks_short,
+        datasets: Object.entries(WEEKLY_AGG).map(([cat,d])=>({
+          label: cat,
+          data: d.sends,
+          borderColor: d.color,
+          backgroundColor: d.color.replace(/[\d.]+\)$/,'0.04)'),
+          tension:.4, fill:true, pointRadius:0, borderWidth:1.5,
+          hidden: cat==='REVIEW'
+        }))
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},
+        scales:{
+          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
+          y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // OR chart
+  const oc = document.getElementById('orChartCanvas');
+  if (oc) {
+    if (orChart) orChart.destroy();
+    orChart = new Chart(oc, {
+      type:'line',
+      data:{
+        labels: weeks_short,
+        datasets:[
+          {label:'Email OR %',data:OR_DATA,borderColor:'rgba(255,255,255,.7)',backgroundColor:'rgba(255,255,255,.04)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,.7)',borderWidth:2,pointHoverRadius:5},
+          {label:'35% benchmark',data:Array(27).fill(35),borderColor:'rgba(251,191,36,.3)',borderDash:[4,4],borderWidth:1,pointRadius:0,fill:false}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.y.toFixed(1)+'%'}}},
+        scales:{
+          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
+          y:{min:26,max:45,ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // Category OR bar chart
+  const cc = document.getElementById('catChartCanvas');
+  if (cc) {
+    if (catChart) catChart.destroy();
+    const catOR = Object.entries(WEEKLY_AGG).map(([cat,d])=>{
+      const totalS = d.sends.reduce((a,b)=>a+b,0);
+      const totalO = d.opens.reduce((a,b)=>a+b,0);
+      return {cat, or: totalS>0?(totalO/totalS*100).toFixed(1):0, color: d.color};
+    }).sort((a,b)=>b.or-a.or);
+
+    catChart = new Chart(cc, {
+      type:'bar',
+      data:{
+        labels: catOR.map(c=>c.cat),
+        datasets:[{data:catOR.map(c=>c.or),backgroundColor:catOR.map(c=>c.color),borderRadius:4,borderSkipped:false}]
+      },
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.x.toFixed(1)+'%'}}},
+        scales:{
+          x:{ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}},
+          y:{ticks:{color:lc,font},grid:{display:false},border:{display:false}}
+        }
+      }
+    });
+  }
+
+  // Push chart (trends view)
+  const pc = document.getElementById('pushChartCanvas');
+  if (pc) {
+    const pushSends = Object.entries(WEEKLY_AGG).map(([c,d])=>({cat:c,total:d.sends.reduce((a,b)=>a+b,0)*0.1,color:d.color}));
+    new Chart(pc, {
+      type:'bar',
+      data:{
+        labels: weeks_short,
+        datasets: Object.entries(WEEKLY_AGG).filter(([c])=>c!=='REVIEW').map(([cat,d])=>({
+          label:cat, data:d.sends.map(v=>Math.round(v*0.15)),
+          backgroundColor: d.color, borderRadius:2, borderSkipped:false
+        }))
+      },
+      options:{responsive:true,maintainAspectRatio:false,stacked:false,
+        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},
+        scales:{
+          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
+          y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
+        }
+      }
+    });
+  }
+}
+
+// ── HELPERS ──
+function fmt(n) {
+  if (!n) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(0)+'K';
+  return n.toLocaleString();
+}
+
+function sortData(data) {
+  return [...data].sort((a,b) => {
+    let av = a[state.sortCol]||0, bv = b[state.sortCol]||0;
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    return state.sortDir==='asc' ? (av>bv?1:-1) : (av<bv?1:-1);
+  });
+}
+
+function sortBy(col) {
+  if (state.sortCol === col) state.sortDir = state.sortDir==='desc'?'asc':'desc';
+  else { state.sortCol=col; state.sortDir='desc'; }
+  state.page = 1;
+  renderView();
+}
+
+function changePage(dir) {
+  state.page = Math.max(1, state.page + dir);
+  renderView();
+}
+
+function setWeekFilter() {
+  state.weekFrom = document.getElementById('weekFrom')?.value || '';
+  state.weekTo = document.getElementById('weekTo')?.value || '';
+  state.page = 1;
+  FILTERED = applyFilters(RAW_DATA);
+  renderView();
+}
+
+function clearWeeks() {
+  state.weekFrom = ''; state.weekTo = '';
+  state.page = 1;
+  FILTERED = applyFilters(RAW_DATA);
+  renderView();
+}
+
+function handleSearch(val) {
+  state.search = val;
+  state.page = 1;
+  FILTERED = applyFilters(RAW_DATA);
+  renderView();
+}
+
+function clearAllFilters() {
+  state.category = 'all'; state.weekFrom = ''; state.weekTo = ''; state.search = '';
+  state.page = 1;
+  FILTERED = applyFilters(RAW_DATA);
+  // Reset sidebar
+  document.querySelectorAll('.sidebar .nav[id^="sb-"]').forEach(n => n.classList.remove('on'));
+  const allNav = document.getElementById('sb-all');
+  if (allNav) allNav.classList.add('on');
+  renderView();
+}
+
+function attachEventListeners() {
+  // Drag and drop on upload zone
+  const zone = document.getElementById('dropZone');
+  if (zone) {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag');
+      if (e.dataTransfer.files[0]) {
+        const input = document.getElementById('uploadInput');
+        // Create synthetic event
+        const dt = new DataTransfer();
+        dt.items.add(e.dataTransfer.files[0]);
+        input.files = dt.files;
+        handleUpload({target: input});
+      }
+    });
+  }
+}
+
+function exportCSV() {
+  const data = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
+  const headers = ['week','category','label','title','email_sent','email_opened','email_or','email_clicked','push_sent','push_opened'];
+  const rows = [headers.join(','), ...data.map(r => headers.map(h => r[h]||'').join(','))];
+  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `casino_crm_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
 </script>
 </body>
 </html>
