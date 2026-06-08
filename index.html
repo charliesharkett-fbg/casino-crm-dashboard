@@ -7,21 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root {
-  --black:#000;--white:#fff;--blue:#041E42;--silver:#D0D3D4;--gray:#707372;
+:root{--black:#000;--white:#fff;--blue:#041E42;--silver:#D0D3D4;--gray:#707372;
   --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.09);--glass-h:rgba(255,255,255,0.07);
-  --muted:#707372;--dim:#D0D3D4;--green:#4ade80;--amber:#fbbf24;--blue-a:#60a5fa;
-  --font-h:'Anton',sans-serif;--font-b:'Inter',sans-serif;
-  --cat-xsell:rgba(255,255,255,0.35);--cat-promo:rgba(208,211,212,0.9);
-  --cat-ret:#4ade80;--cat-life:rgba(255,255,255,0.75);--cat-tourn:#fbbf24;--cat-rev:rgba(251,191,36,0.6);
-}
+  --muted:#707372;--dim:#D0D3D4;--green:#4ade80;--amber:#fbbf24;
+  --font-h:'Anton',sans-serif;--font-b:'Inter',sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-/* ── HEADER ── */
+/* HEADER */
 .hdr{background:rgba(4,30,66,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-b);
   padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:200}
@@ -41,10 +37,21 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .btn-g{background:var(--glass);border:1px solid var(--glass-b);color:var(--dim)}.btn-g:hover{background:var(--glass-h);color:var(--white)}
 .btn-sm{padding:5px 12px;font-size:10px}
 
-/* ── LAYOUT ── */
+/* DATA QUALITY BANNER */
+.dq-banner{background:rgba(251,191,36,0.07);border-bottom:1px solid rgba(251,191,36,0.2);
+  padding:.625rem 2rem;display:flex;align-items:center;gap:12px;font-size:11px;color:var(--amber);
+  position:sticky;top:58px;z-index:190;backdrop-filter:blur(12px)}
+.dq-banner strong{font-weight:600}
+.dq-banner a{color:var(--amber);text-decoration:underline;cursor:pointer;opacity:.8}
+.dq-banner a:hover{opacity:1}
+.dq-close{margin-left:auto;cursor:pointer;opacity:.5;font-size:16px;line-height:1;padding:0 4px}.dq-close:hover{opacity:1}
+.dq-pill{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);
+  border-radius:100px;padding:2px 10px;font-size:10px;font-weight:600;white-space:nowrap}
+
+/* LAYOUT */
 .wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
 
-/* ── SIDEBAR ── */
+/* SIDEBAR */
 .sidebar{background:rgba(4,30,66,0.3);backdrop-filter:blur(12px);border-right:1px solid var(--glass-b);
   padding:1.5rem 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;z-index:100}
 .sb-sec{margin-bottom:1.75rem}
@@ -60,28 +67,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .nav-n.w{background:rgba(251,191,36,.15);color:var(--amber)}
 .sb-hr{border:none;border-top:1px solid var(--glass-b);margin:.75rem 1.25rem}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{padding:2rem;position:relative;z-index:1;min-width:0}
 
-/* ── FILTER BAR ── */
+/* FILTER BAR */
 .filter-bar{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
-  border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;
-  display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.filter-group{display:flex;align-items:center;gap:8px}
-.filter-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-.filter-chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.12);
-  color:var(--muted);cursor:pointer;transition:all .15s;background:transparent;white-space:nowrap}
-.chip:hover{border-color:rgba(255,255,255,.3);color:var(--dim)}
-.chip.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:var(--white)}
-.chip.cat-on-xsell{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:var(--white)}
-.chip.cat-on-promo{background:rgba(208,211,212,.12);border-color:rgba(208,211,212,.4);color:var(--silver)}
-.chip.cat-on-ret{background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.4);color:var(--green)}
-.chip.cat-on-life{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35);color:var(--white)}
-.chip.cat-on-tourn{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.4);color:var(--amber)}
-.chip.cat-on-rev{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:var(--amber)}
-.filter-div{width:1px;height:24px;background:var(--glass-b)}
-.search-wrap{flex:1;min-width:180px;position:relative}
+  border-radius:12px;padding:.875rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.875rem;flex-wrap:wrap}
+.filter-label{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.filter-chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:500;padding:4px 11px;border-radius:100px;
+  border:1px solid rgba(255,255,255,.1);color:var(--muted);cursor:pointer;transition:all .15s;background:transparent;white-space:nowrap}
+.chip:hover{border-color:rgba(255,255,255,.28);color:var(--dim)}
+.chip.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);color:var(--white)}
+.chip.c-xsell.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35);color:var(--white)}
+.chip.c-promo.on{background:rgba(208,211,212,.12);border-color:rgba(208,211,212,.35);color:var(--silver)}
+.chip.c-ret.on{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.35);color:var(--green)}
+.chip.c-life.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:var(--white)}
+.chip.c-tourn.on{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.35);color:var(--amber)}
+.chip.c-rev.on{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25);color:var(--amber)}
+.filter-div{width:1px;height:22px;background:var(--glass-b);flex-shrink:0}
+
+/* SEARCH */
+.search-wrap{flex:1;min-width:160px;position:relative}
 .search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
   border-radius:8px;padding:6px 12px 6px 30px;font-family:var(--font-b);font-size:12px;
   color:var(--white);outline:none;transition:all .2s}
@@ -89,19 +96,29 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .search-input::placeholder{color:var(--muted)}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
 
-/* ── WEEK RANGE ── */
-.week-range{display:flex;align-items:center;gap:8px}
+/* SEARCH DROPDOWN */
+.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:rgba(4,30,66,.98);
+  border:1px solid var(--glass-b);border-radius:10px;z-index:300;max-height:280px;overflow-y:auto;
+  backdrop-filter:blur(20px)}
+.search-result{padding:8px 14px;cursor:pointer;transition:background .12s;border-bottom:1px solid rgba(255,255,255,.04)}
+.search-result:last-child{border-bottom:none}
+.search-result:hover{background:rgba(255,255,255,.05)}
+.sr-title{font-size:12px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.sr-or{font-weight:600;color:var(--green)}
+
+/* WEEK RANGE */
 .week-select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
   border-radius:6px;padding:5px 10px;font-family:var(--font-b);font-size:11px;
   color:var(--dim);outline:none;cursor:pointer}
 .week-select option{background:#041E42}
 
-/* ── SECTION ── */
+/* SECTION */
 .sec{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
   margin:2rem 0 1rem;display:flex;align-items:center;gap:12px}
 .sec::after{content:'';flex:1;height:1px;background:var(--glass-b)}
 
-/* ── GLASS CARD ── */
+/* GLASS CARD */
 .card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
   border-radius:12px;padding:1.25rem;transition:border-color .2s,background .2s}
 .card:hover{border-color:rgba(255,255,255,.14);background:var(--glass-h)}
@@ -110,7 +127,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .ctag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   padding:2px 8px;border-radius:100px;background:rgba(255,255,255,.08);color:var(--muted)}
 
-/* ── KPI ── */
+/* KPI */
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
 .kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
   border-radius:12px;padding:1.125rem;transition:all .2s;animation:up .5s ease both}
@@ -124,46 +141,92 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .kpi-sub{font-size:10px;margin-top:5px;color:var(--muted)}
 .kpi-sub.up{color:var(--green)}.kpi-sub.dn{color:var(--amber)}.kpi-sub.w{color:var(--amber)}
 
-/* ── GRIDS ── */
+/* GRIDS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
 .g6040{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:1.5rem}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
 
-/* ── CHANNEL CARDS ── */
+/* CHANNEL CARDS */
 .ch-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
   border-radius:12px;padding:1rem;transition:all .2s;cursor:pointer}
-.ch-card:hover{background:var(--glass-h);border-color:rgba(255,255,255,.16)}
-.ch-card.on{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
+.ch-card:hover,.ch-card.on{background:var(--glass-h);border-color:rgba(255,255,255,.2)}
 .ch-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.ch-val{font-family:var(--font-h);font-size:22px;color:var(--white);line-height:1;transition:all .3s}
-.ch-or{font-size:10px;color:var(--muted);margin-top:4px}
+.ch-val{font-family:var(--font-h);font-size:22px;color:var(--white);line-height:1}
+.ch-meta{font-size:10px;color:var(--muted);margin-top:4px}
 .ch-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px;margin-top:10px}
-.ch-bar-f{height:2px;border-radius:1px;background:rgba(255,255,255,.35);transition:width .4s}
+.ch-bar-f{height:2px;border-radius:1px;background:rgba(255,255,255,.35)}
 
-/* ── CAT BARS ── */
-.cat-list{display:flex;flex-direction:column;gap:11px}
-.cat-row{display:grid;grid-template-columns:110px 1fr 62px 52px;align-items:center;gap:10px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .15s}
+/* CAT BARS */
+.cat-list{display:flex;flex-direction:column;gap:10px}
+.cat-row{display:grid;grid-template-columns:110px 1fr 62px 52px;align-items:center;gap:10px;
+  cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .15s}
 .cat-row:hover{background:rgba(255,255,255,.04)}
 .cat-row.active{background:rgba(255,255,255,.06)}
 .cat-name{font-size:11px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-t{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
-.bar-f{height:4px;border-radius:2px;transition:width .4s}
+.bar-f{height:4px;border-radius:2px}
 .cat-num{font-size:10px;color:var(--muted);text-align:right}
 .cat-or{font-size:10px;font-weight:600;color:var(--dim);text-align:right}
 .cat-or.g{color:var(--green)}
 
-/* ── TABLE ── */
+/* SCORECARD GRID */
+.scorecard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.scorecard{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
+  border-radius:12px;padding:1.25rem;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.scorecard:hover{border-color:rgba(255,255,255,.18);background:var(--glass-h)}
+.scorecard-cat{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.scorecard-or{font-family:var(--font-h);font-size:36px;letter-spacing:.02em;line-height:1;margin-bottom:.25rem}
+.scorecard-label{font-size:10px;color:var(--muted);margin-bottom:.75rem}
+.scorecard-stats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--glass-b)}
+.scorecard-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.scorecard-stat-val{font-size:12px;font-weight:600;color:var(--white);margin-top:2px}
+.trend-arrow{position:absolute;top:1rem;right:1rem;font-size:18px;opacity:.6}
+.scorecard-best{font-size:10px;color:var(--dim);margin-top:.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* WoW COMPARISON */
+.wow-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:start;margin-bottom:1.5rem}
+.wow-col{background:var(--glass);border:1px solid var(--glass-b);border-radius:12px;padding:1.25rem}
+.wow-col.selected{border-color:rgba(255,255,255,.25)}
+.wow-vs{display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:28px;color:var(--muted);padding-top:3rem}
+.wow-week-lbl{font-family:var(--font-h);font-size:16px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;color:var(--white)}
+.wow-metric{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.wow-metric:last-child{border-bottom:none}
+.wow-metric-lbl{font-size:11px;color:var(--muted)}
+.wow-metric-val{font-size:12px;font-weight:600;color:var(--white)}
+.wow-delta{font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px}
+.wow-delta.up{background:rgba(74,222,128,.15);color:var(--green)}
+.wow-delta.dn{background:rgba(251,191,36,.15);color:var(--amber)}
+.wow-delta.flat{background:rgba(255,255,255,.06);color:var(--muted)}
+
+/* CAMPAIGN DETAIL */
+.detail-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;cursor:pointer;
+  margin-bottom:1.5rem;transition:color .15s}
+.detail-back:hover{color:var(--white)}
+.detail-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:1.5rem}
+.detail-kpi{background:var(--glass);border:1px solid var(--glass-b);border-radius:10px;padding:.875rem 1rem}
+.detail-kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.detail-kpi-val{font-family:var(--font-h);font-size:22px;color:var(--white);line-height:1}
+.detail-kpi-delta{font-size:10px;margin-top:4px}
+.vs-avg-up{color:var(--green)}.vs-avg-dn{color:var(--amber)}.vs-avg-flat{color:var(--muted)}
+
+/* NOTES */
+.note-area{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:.875rem;font-family:var(--font-b);font-size:12px;color:var(--white);
+  resize:vertical;min-height:80px;outline:none;transition:border-color .2s}
+.note-area:focus{border-color:rgba(255,255,255,.25)}
+.note-area::placeholder{color:var(--muted)}
+
+/* TABLE */
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-  text-align:left;padding:8px 10px;border-bottom:1px solid var(--glass-b);white-space:nowrap;
-  cursor:pointer;user-select:none;transition:color .15s}
+  text-align:left;padding:8px 10px;border-bottom:1px solid var(--glass-b);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s}
 th:hover{color:var(--dim)}
-th.sort-asc::after{content:' ↑'}
-th.sort-desc::after{content:' ↓'}
-td{padding:8px 10px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap;transition:background .15s}
+th.sort-asc::after{content:' ↑'}th.sort-desc::after{content:' ↓'}
+td{padding:8px 10px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap}
 tr:hover td{background:rgba(255,255,255,.025)}
-td.td-n{color:var(--white);font-weight:500;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+td.td-n{color:var(--white);font-weight:500;max-width:240px;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+td.td-n:hover{color:var(--silver);text-decoration:underline}
 .badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;
   text-transform:uppercase;letter-spacing:.04em}
 .b-xsell{background:rgba(255,255,255,.08);color:var(--dim)}
@@ -174,7 +237,7 @@ td.td-n{color:var(--white);font-weight:500;max-width:240px;overflow:hidden;text-
 .b-rev{background:rgba(251,191,36,.08);color:var(--amber)}
 .hi{color:var(--white);font-weight:600}.gr{color:var(--green);font-weight:600}.am{color:var(--amber);font-weight:600}
 
-/* ── PAGINATION ── */
+/* PAGINATION */
 .pagination{display:flex;align-items:center;gap:8px;margin-top:1rem;justify-content:flex-end}
 .pg-btn{background:var(--glass);border:1px solid var(--glass-b);color:var(--dim);
   padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s}
@@ -182,487 +245,404 @@ td.td-n{color:var(--white);font-weight:500;max-width:240px;overflow:hidden;text-
 .pg-btn:disabled{opacity:.3;cursor:default}
 .pg-info{font-size:11px;color:var(--muted)}
 
-/* ── ALERTS ── */
+/* ALERTS */
 .alerts,.recs{display:flex;flex-direction:column;gap:8px}
-.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;
-  font-size:11px;line-height:1.5;border:1px solid}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;font-size:11px;line-height:1.5;border:1px solid}
 .a-i{font-size:13px;flex-shrink:0;margin-top:1px}
 .a-w{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);color:#fbbf24}
 .a-n{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);color:var(--dim)}
 .a-ok{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2);color:#4ade80}
 .alert strong{font-weight:600}
-.rec{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;
-  background:var(--glass);border:1px solid var(--glass-b);border-radius:8px;
-  font-size:11px;line-height:1.5;color:var(--dim)}
+.rec{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;background:var(--glass);
+  border:1px solid var(--glass-b);border-radius:8px;font-size:11px;line-height:1.5;color:var(--dim)}
 .rec-n{font-family:var(--font-h);font-size:22px;color:rgba(255,255,255,.1);line-height:1;flex-shrink:0;width:24px;margin-top:1px}
 .rec strong{color:var(--white);font-weight:600}
 
-/* ── UPLOAD ZONE ── */
-.upload-zone{border:1.5px dashed rgba(255,255,255,.15);border-radius:12px;padding:2rem;
-  text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02)}
-.upload-zone:hover,.upload-zone.drag{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
-.upload-zone p{font-size:12px;color:var(--muted);margin-top:.5rem}
-.upload-zone strong{color:var(--dim);font-weight:600}
-
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:3rem;color:var(--muted);font-size:12px}
-.empty-icon{font-size:2rem;margin-bottom:.75rem;opacity:.3}
-
-/* ── FOOTER ── */
-.footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--glass-b);
-  display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
-.footer-logo{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-
-/* ── DATA STATUS BAR ── */
-.status-bar{display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding:.625rem 1rem;
-  background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);border-radius:8px;
-  font-size:11px;color:#4ade80}
-.status-bar.warn{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.15);color:var(--amber)}
-.status-bar span{color:var(--dim)}
-
-/* ── TOOLTIP ── */
-.tooltip{position:relative}
-.tooltip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;
-  transform:translateX(-50%);background:rgba(4,30,66,.98);border:1px solid var(--glass-b);
-  color:var(--dim);font-size:10px;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:999;pointer-events:none}
-
-/* scrollbar */
+/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+/* FOOTER */
+.footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--glass-b);
+  display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
+.footer-logo{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="hdr">
   <div class="logo">
-    <div class="logo-wm">FANATICS <span>CASINO</span></div>
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACrBTIDASIAAhEBAxEB/8QAHQABAAMBAQEBAQEAAAAAAAAAAAcICQYFBAMCAf/EAF4QAAEDAwIDAwQJCw8MAgEFAQEAAgMEBQYHEQgSITFBUQkTYXEUIjI4YnWBkbMVGCM3QlJ0kqGxshYzNFVWcnN2gpOVorTR0xckNkNHVIOFlMHE0lOjYyaEwsPU8P/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCmSK/Fn4V9E8zwe03rGq++wQVlIyWGthrGvdLuOpka9rgHb7gtby7EEdNlw2TcEF1j5n4zndFU7+5iuFG6Hb1vYX7/AIoQVARTrkXCdrRaXu9jWOgvMbe2SguEe3zSljj8yj+96TanWVzhcsAyWFre2QW6V8f47QW/lQcUi/eto6yil81W0k9NJ97LGWH5ivwQERftS0tTVyCOlp5p3k7BsbC4/MEH4ouptOnGoN22+pmDZLWA/dQ2uZzfnDdl29i4Z9a7uWmPCpqOMnrJWVUMPL62ufzfMEEPorSY3wU57V8j77k1gtcbu1sHnKmRvrHKxu/qcpSxXgrwKhLZMhyO+XmRu27IQylid47gBzvmcEFCV7mLYflmUzCLG8au93dvsTR0b5Wt9ZaNgPSVpriWhekmLlj7VglodKzblmrIzVSAjvDpi4g+rZSJDFFBCyGGNkcbAGsYxoDWgdgAHYEGc2I8JOsF85JK+322wQu681wrGl237yLnIPoOyl3FOCG1xhkmVZzWVJPuobbSNiA9AkeXb/ihW/RBCOOcK+i1na0y43UXaVv+sr66V+/rawtYfxVIFn0x04tDWi24HjNMW/dstcPP8ruXc/KV1yIPnpKGio2htJR09OB2CKMN/MF+k9PBUN5Z4Y5W+D2hw/Kv0RByt7030+vbHMu2EY5Wc3a6W2xF49TuXcH1FRXmnCRpFfg+S20dxx2oduQ6gqi5hPpZLzDb0N5VPyIM+NTeD/UPHGy1mLVNLldCzd3JCPMVQAG/WNx2d6muJO3Z3Ku1yoa22101BcaOoo6uB3JNBURmOSN3g5rgCD6CtkFw+q2lOD6mWx1JlNmilnDeWGvhAZVQfvJNidvgndp7wgyfRTfxAcOGYaYOnu9EH37F2ncV8Ef2SnHhOwb8vhzjdp6blpIaoQQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERBa7gJ1gFivh0zv9Vy225ymS1SyO6Q1J7YuvY2Tu+H6Xq9Sxqgmlp5454JXxSxuD45GOLXNcDuCCOwg96034VNWYdVNOIZ6yZv6obWG011j7C923tZgPB4BPocHDsAQS8iIg/mRjJWFkjGvYe1rhuCvgksVkldzSWa3PO227qZh/7L0UQefDY7LC7mis9vjPi2mYP+y+9jGRtDGNa1o7ABsF/qICIiAiIgIiICIiAiIgIiICIiAiIg/GvfSx0NQ+udC2lbE4zmbbkDNvbc2/TbbffdZM6w3LGLvqdf7jhltbbbBNVuNFTtGzQ0AAuDfuQ5wc4N7Gh2w7Fbzj61dfZLI3TGw1JZX3OISXeWN2xipj7mHp3yd/wBtsQ/pRdAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBSBoBqTXaW6lUGSU5kkoSfMXKmaf1+mcRzDb74dHN+E0d26j9EGxlkudBerPR3e1VUdVQ1sLZ6eaM7tkY4bgj5CvsVKeADV009W7Su/VX2CYunskkh9w/q6SDf4XV7R48w7wFdZAREQEREBERAREQEREBEXg5JmuH41zDIcqslqc0bllZXRxO/FcQSg95FDV84n9E7U5zDmArZWnbko6KeXf1O5OU/OuRuHGfpTTuLaa2ZVWbdjo6OFrT+NKD+RBZNFVs8bOn/PsMVyfl37eWDfb1ecXqWzjN0nqnhlTb8ooN+181FE5o/ElcfyILIIotxbiE0cyORsVFnVtp5XHYMrw+k6+G8oa0/IVJtJU01ZTR1VJURVEEg5o5YnhzHDxBHQhB+q43WjP7Zppp3csruTmOdAzzdJA52xqah24jjHedz1O3Y0OPcuxcQ1pc4gADck9yzc4yNWzqTqI622mrMmNWRzoKMNPtaiXskn9O5HK34LdxtzFBD2V366ZPklwyG9VLqm4V87p55D3uJ7B4AdgHcAAvMREBERARFb/AIWeHTT7UTSOlynJHXd9fUVc8ZFPVCNjWsdygAcp8N9/SgqAi0S+s80f+9yD+kB/6J9Z5o/97kH9ID/0QZ2otEvrPNH/AL3IP6QH/on1nmj/AN7kH9ID/wBEGdqLRL6zzR/73IP6QH/on1nmj/3uQf0gP/RB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" alt="Fanatics Casino" style="height:26px;mix-blend-mode:screen;filter:brightness(1.05)">
     <div class="logo-div"></div>
     <span class="logo-tag">CRM Analytics</span>
   </div>
+  
   <div class="hdr-r">
-    <div class="pill" id="dataStatus"><div class="live-dot"></div><span id="statusText">Loading data...</span></div>
+    <div class="pill" id="statusPill"><div class="live-dot"></div><span id="statusText">27 weeks · W44 2025–W23 2026</span></div>
     <button class="btn btn-g btn-sm" onclick="document.getElementById('uploadInput').click()">↑ Upload CSV</button>
     <input type="file" id="uploadInput" accept=".csv" style="display:none" onchange="handleUpload(event)">
     <button class="btn btn-w btn-sm" onclick="exportCSV()">↓ Export</button>
   </div>
 </header>
 
+<!-- DATA QUALITY BANNER -->
+<div class="dq-banner" id="dqBanner">
+  <span class="dq-pill">⚠ Data Quality</span>
+  <span><strong>This dashboard is running on partial data.</strong> 29% of campaigns are uncategorised (REVIEW) and XP campaign taxonomy is not yet confirmed. <a onclick="setView('insights')">See full data quality breakdown →</a> Speak to Jackson Wieger to unlock the complete dashboard.</span>
+  <span class="dq-close" onclick="document.getElementById('dqBanner').style.display='none'">×</span>
+</div>
+
 <div class="wrap">
+
+<!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sb-sec">
     <div class="sb-lbl">Views</div>
-    <div class="nav on" onclick="setView('overview')"><div class="nav-dot" style="background:var(--white)"></div>Overview</div>
-    <div class="nav" onclick="setView('trends')"><div class="nav-dot" style="background:var(--silver)"></div>Trends</div>
-    <div class="nav" onclick="setView('campaigns')"><div class="nav-dot" style="background:var(--dim)"></div>All Campaigns</div>
-    <div class="nav" onclick="setView('insights')"><div class="nav-dot" style="background:var(--green)"></div>Insights</div>
+    <div class="nav on" id="vnav-overview" onclick="setView('overview')"><div class="nav-dot" style="background:var(--white)"></div>Overview</div>
+    <div class="nav" id="vnav-trends" onclick="setView('trends')"><div class="nav-dot" style="background:var(--silver)"></div>Trends</div>
+    <div class="nav" id="vnav-scorecards" onclick="setView('scorecards')"><div class="nav-dot" style="background:var(--green)"></div>Scorecards</div>
+    <div class="nav" id="vnav-wow" onclick="setView('wow')"><div class="nav-dot" style="background:var(--dim)"></div>Week vs Week</div>
+    <div class="nav" id="vnav-campaigns" onclick="setView('campaigns')"><div class="nav-dot" style="background:var(--muted)"></div>All Campaigns</div>
+    <div class="nav" id="vnav-insights" onclick="setView('insights')"><div class="nav-dot" style="background:var(--amber)"></div>Insights</div>
   </div>
   <hr class="sb-hr">
   <div class="sb-sec">
-    <div class="sb-lbl">Categories</div>
-    <div class="nav" id="sb-all" onclick="setSidebarCat('all')"><div class="nav-dot" style="background:var(--white)"></div>All<span class="nav-n" id="sb-all-n">—</span></div>
-    <div class="nav" id="sb-Cross-Sell" onclick="setSidebarCat('Cross-Sell')"><div class="nav-dot" style="background:rgba(255,255,255,.5)"></div>Cross-Sell<span class="nav-n" id="sb-Cross-Sell-n">—</span></div>
-    <div class="nav" id="sb-Promo" onclick="setSidebarCat('Promo')"><div class="nav-dot" style="background:var(--silver)"></div>Promo<span class="nav-n" id="sb-Promo-n">—</span></div>
-    <div class="nav" id="sb-Retention" onclick="setSidebarCat('Retention')"><div class="nav-dot" style="background:var(--green)"></div>Retention<span class="nav-n" id="sb-Retention-n">—</span></div>
-    <div class="nav" id="sb-Lifecycle" onclick="setSidebarCat('Lifecycle')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Lifecycle<span class="nav-n" id="sb-Lifecycle-n">—</span></div>
-    <div class="nav" id="sb-Tournaments" onclick="setSidebarCat('Tournaments')"><div class="nav-dot" style="background:var(--amber)"></div>Tournaments<span class="nav-n" id="sb-Tournaments-n">—</span></div>
-    <div class="nav" id="sb-REVIEW" onclick="setSidebarCat('REVIEW')"><div class="nav-dot" style="background:var(--amber);opacity:.6"></div>REVIEW<span class="nav-n w" id="sb-REVIEW-n">—</span></div>
+    <div class="sb-lbl">Filter by Category</div>
+    <div class="nav" id="sb-all" onclick="setSidebarCat('all')"><div class="nav-dot" style="background:var(--white)"></div>All<span class="nav-n" id="sb-all-n">103.8M</span></div>
+    <div class="nav" id="sb-Cross-Sell" onclick="setSidebarCat('Cross-Sell')"><div class="nav-dot" style="background:rgba(255,255,255,.5)"></div>Cross-Sell<span class="nav-n">90.6M</span></div>
+    <div class="nav" id="sb-Promo" onclick="setSidebarCat('Promo')"><div class="nav-dot" style="background:var(--silver)"></div>Promo<span class="nav-n">2.1M</span></div>
+    <div class="nav" id="sb-Retention" onclick="setSidebarCat('Retention')"><div class="nav-dot" style="background:var(--green)"></div>Retention<span class="nav-n">506K</span></div>
+    <div class="nav" id="sb-Lifecycle" onclick="setSidebarCat('Lifecycle')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Lifecycle<span class="nav-n">205K</span></div>
+    <div class="nav" id="sb-Tournaments" onclick="setSidebarCat('Tournaments')"><div class="nav-dot" style="background:var(--amber)"></div>Tournaments<span class="nav-n">591K</span></div>
+    <div class="nav" id="sb-REVIEW" onclick="setSidebarCat('REVIEW')"><div class="nav-dot" style="background:var(--amber);opacity:.6"></div>REVIEW<span class="nav-n w">9.8M</span></div>
   </div>
   <hr class="sb-hr">
   <div class="sb-sec">
-    <div class="sb-lbl">Channels</div>
-    <div class="nav on" id="ch-nav-email" onclick="setChannel('email')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Email</div>
-    <div class="nav" id="ch-nav-push" onclick="setChannel('push')"><div class="nav-dot" style="background:var(--silver)"></div>Push</div>
-    <div class="nav" id="ch-nav-iam" onclick="setChannel('iam')"><div class="nav-dot" style="background:var(--green)"></div>IAM</div>
-    <div class="nav" id="ch-nav-inbox" onclick="setChannel('inbox')"><div class="nav-dot" style="background:var(--muted)"></div>Inbox</div>
+    <div class="sb-lbl">Channel</div>
+    <div class="nav on" id="ch-email" onclick="setChannel('email')"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Email</div>
+    <div class="nav" id="ch-push" onclick="setChannel('push')"><div class="nav-dot" style="background:var(--silver)"></div>Push</div>
+    <div class="nav" id="ch-iam" onclick="setChannel('iam')"><div class="nav-dot" style="background:var(--green)"></div>IAM</div>
+    <div class="nav" id="ch-inbox" onclick="setChannel('inbox')"><div class="nav-dot" style="background:var(--muted)"></div>Inbox</div>
   </div>
 </nav>
 
 <main class="main" id="mainContent">
-  <!-- Populated by JS -->
-  <div class="empty"><div class="empty-icon">⟳</div><div>Loading dashboard...</div></div>
+  <div style="display:flex;align-items:center;justify-content:center;height:60vh;color:var(--muted)">Loading...</div>
 </main>
+
 </div>
 
 <script>
-// ── DATA STORE ──
-let RAW_DATA = [];
-let FILTERED = [];
-let state = {
-  view: 'overview',
-  category: 'all',
-  channel: 'email',
-  weekFrom: '',
-  weekTo: '',
-  search: '',
-  sortCol: 'email_opened',
-  sortDir: 'desc',
-  page: 1,
-  pageSize: 20
+// ── DATA ──
+const WEEKS = ['2025-W44','2025-W45','2025-W46','2025-W47','2025-W48','2025-W49','2025-W50','2025-W51','2025-W52','2026-W01','2026-W02','2026-W03','2026-W04','2026-W05','2026-W06','2026-W07','2026-W08','2026-W09','2026-W10','2026-W11','2026-W12','2026-W13','2026-W14','2026-W15','2026-W16','2026-W17','2026-W23'];
+const WEEKS_SHORT = WEEKS.map(w=>w.replace('2025-','').replace('2026-',''));
+
+const AGG = {
+  'Cross-Sell':{color:'rgba(255,255,255,0.4)',sends:[741736,1761420,1160558,2072834,2121174,1587082,1053060,927476,614764,6599628,6512682,4055862,6001232,4497516,8267720,2585026,2127200,1938736,2031676,3472726,5531192,6908620,5579368,1000544,1384740,759280,1934578],opens:[268527,698253,450417,793219,812793,631024,328918,351924,234028,2765028,2403022,1484023,2173152,1778924,2901698,855382,753834,680060,714380,1213268,1815498,2254682,1940520,348706,475468,246378,614820],push:[60000,180000,120000,210000,220000,160000,110000,95000,65000,680000,670000,420000,620000,460000,850000,265000,220000,200000,210000,358000,570000,712000,575000,103000,143000,78000,199000]},
+  'Promo':{color:'rgba(208,211,212,0.9)',sends:[49296,126768,91944,126224,114276,107064,89532,140988,83556,173688,140736,127848,109284,140880,131724,91980,67044,53676,69000,84720,114000,120096,89796,0,0,765760,0],opens:[18486,50476,36582,50756,45186,43128,30714,54612,32124,60276,52656,46320,40260,55464,47376,34692,26052,21204,28944,33444,42636,42840,33720,0,0,239079,0],push:[4000,10000,7000,9000,8000,7500,6000,9500,5500,12000,9500,8500,7200,9800,9200,6500,4800,4000,5200,6300,8100,8600,6500,0,0,55000,0]},
+  'Retention':{color:'rgba(74,222,128,0.85)',sends:[16680,59372,47688,56476,47368,49308,62584,68472,27784,104616,101948,80600,103468,67856,85548,77040,68892,75756,74932,74280,73316,75480,74356,0,0,0,178164],opens:[7278,24324,19386,23394,19092,20904,25014,27948,10808,41484,40776,31436,41444,27108,33780,29400,26814,28908,29148,28188,27792,28482,29052,0,0,0,68952],push:[1200,4200,3300,3900,3300,3400,4400,4700,1900,7200,7000,5500,7100,4700,5900,5300,4700,5200,5200,5100,5000,5200,5100,0,0,0,12200]},
+  'Lifecycle':{color:'rgba(255,255,255,0.75)',sends:[11124,21540,17160,19620,18288,19404,18552,18552,7644,72396,75232,68832,75824,64856,80424,77484,74568,71808,70416,71424,75424,71064,74916,0,0,0,27254],opens:[4026,7854,6216,7434,6786,7794,6624,6948,2772,29196,28596,25992,27396,25740,31668,27900,26628,25956,25068,25956,26532,26532,26640,0,0,0,10944],push:[800,1500,1200,1400,1300,1400,1300,1300,550,5200,5400,4900,5400,4600,5700,5500,5300,5100,5000,5100,5400,5100,5300,0,0,0,1950]},
+  'Tournaments':{color:'rgba(251,191,36,0.8)',sends:[158972,111062,113010,132493,123887,80945,127670,96763,68301,146404,101734,81497,111109,74076,118373,115477,103876,81924,66789,97728,61577,72022,31580,65615,0,0,65614],opens:[52466,39904,43188,49920,46404,32628,40416,33012,24300,42516,33906,25920,35244,23592,41064,38376,34032,28188,23508,32844,20832,23940,10920,21960,0,0,21960],push:[11000,7700,7800,9200,8600,5600,8800,6700,4700,10100,7000,5600,7700,5100,8200,8000,7200,5700,4600,6800,4300,5000,2200,4500,0,0,4500]},
+  'REVIEW':{color:'rgba(251,191,36,0.4)',sends:[168400,201000,151000,215000,260000,235000,198000,205000,176000,410000,385000,320000,375000,310000,420000,280000,245000,220000,215000,280000,310000,350000,295000,98000,170000,160000,238077],opens:[57000,68000,52000,74000,89000,82000,65000,72000,62000,141000,133000,110000,130000,110000,148000,94000,87000,78000,77000,99000,111000,124000,105000,35000,62000,56000,75740],push:[12000,14000,10000,15000,18000,16000,14000,14000,12000,28000,27000,22000,26000,22000,29000,20000,17000,15000,15000,20000,22000,25000,21000,7000,12000,11000,17000]}
 };
 
-const CAT_COLORS = {
-  'Cross-Sell':'rgba(255,255,255,0.4)',
-  'Promo':'rgba(208,211,212,0.9)',
-  'Retention':'rgba(74,222,128,0.85)',
-  'Lifecycle':'rgba(255,255,255,0.75)',
-  'Tournaments':'rgba(251,191,36,0.8)',
-  'REVIEW':'rgba(251,191,36,0.45)',
-  'Transactional':'rgba(112,115,114,0.5)'
-};
+const OR_DATA = [38.3,39.3,37.9,37.7,37.4,40.0,30.5,36.2,35.8,41.7,37.0,36.3,36.0,39.2,35.3,32.6,35.5,35.4,34.8,34.6,32.6,32.6,34.7,34.4,33.6,31.8,30.6];
 
-const WEEKS_MASTER = ['2025-W44','2025-W45','2025-W46','2025-W47','2025-W48','2025-W49','2025-W50','2025-W51','2025-W52','2026-W01','2026-W02','2026-W03','2026-W04','2026-W05','2026-W06','2026-W07','2026-W08','2026-W09','2026-W10','2026-W11','2026-W12','2026-W13','2026-W14','2026-W15','2026-W16','2026-W17','2026-W23'];
-
-// ── SEEDED DATA (from Master export analysis) ──
-const SEEDED = [
-  // week, category, label, title, email_sent, email_opened, email_clicked, email_or, push_sent, push_opened, iam_sent, iam_opened, inbox_sent, inbox_opened
-  // We seed aggregated weekly rows per category for trend purposes
-  // plus individual notable campaigns
-];
-
-// Pre-aggregated weekly data by category (from Python analysis)
-const WEEKLY_AGG = {
-  'Cross-Sell':{sends:[741736,1761420,1160558,2072834,2121174,1587082,1053060,927476,614764,6599628,6512682,4055862,6001232,4497516,8267720,2585026,2127200,1938736,2031676,3472726,5531192,6908620,5579368,1000544,1384740,759280,1934578],opens:[268527,698253,450417,793219,812793,631024,328918,351924,234028,2765028,2403022,1484023,2173152,1778924,2901698,855382,753834,680060,714380,1213268,1815498,2254682,1940520,348706,475468,246378,614820],color:'rgba(255,255,255,0.35)'},
-  'Promo':{sends:[49296,126768,91944,126224,114276,107064,89532,140988,83556,173688,140736,127848,109284,140880,131724,91980,67044,53676,69000,84720,114000,120096,89796,0,0,765760,0],opens:[18486,50476,36582,50756,45186,43128,30714,54612,32124,60276,52656,46320,40260,55464,47376,34692,26052,21204,28944,33444,42636,42840,33720,0,0,239079,0],color:'rgba(208,211,212,0.85)'},
-  'Retention':{sends:[16680,59372,47688,56476,47368,49308,62584,68472,27784,104616,101948,80600,103468,67856,85548,77040,68892,75756,74932,74280,73316,75480,74356,0,0,0,178164],opens:[7278,24324,19386,23394,19092,20904,25014,27948,10808,41484,40776,31436,41444,27108,33780,29400,26814,28908,29148,28188,27792,28482,29052,0,0,0,68952],color:'rgba(74,222,128,0.8)'},
-  'Lifecycle':{sends:[11124,21540,17160,19620,18288,19404,18552,18552,7644,72396,75232,68832,75824,64856,80424,77484,74568,71808,70416,71424,75424,71064,74916,0,0,0,27254],opens:[4026,7854,6216,7434,6786,7794,6624,6948,2772,29196,28596,25992,27396,25740,31668,27900,26628,25956,25068,25956,26532,26532,26640,0,0,0,10944],color:'rgba(255,255,255,0.7)'},
-  'Tournaments':{sends:[158972,111062,113010,132493,123887,80945,127670,96763,68301,146404,101734,81497,111109,74076,118373,115477,103876,81924,66789,97728,61577,72022,31580,65615,0,0,65614],opens:[52466,39904,43188,49920,46404,32628,40416,33012,24300,42516,33906,25920,35244,23592,41064,38376,34032,28188,23508,32844,20832,23940,10920,21960,0,0,21960],color:'rgba(251,191,36,0.7)'},
-  'REVIEW':{sends:[168400,201000,151000,215000,260000,235000,198000,205000,176000,410000,385000,320000,375000,310000,420000,280000,245000,220000,215000,280000,310000,350000,295000,98000,170000,160000,238077],opens:[57000,68000,52000,74000,89000,82000,65000,72000,62000,141000,133000,110000,130000,110000,148000,94000,87000,78000,77000,99000,111000,124000,105000,35000,62000,56000,75740],color:'rgba(251,191,36,0.35)'},
-};
-
-// Top campaigns seeded
 const TOP_CAMPAIGNS = [
   {week:'2026-W17',category:'Promo',label:'Casino Promo',title:'042026 Cas Khloud Promo',email_sent:765760,email_opened:239079,email_clicked:15276,email_or:31.2,push_sent:0,push_opened:0},
+  {week:'2026-W23',category:'Promo',label:'Casino Promo',title:'060226 Sizzling Summer Spins Launch',email_sent:611620,email_opened:184738,email_clicked:3695,email_or:30.2,push_sent:0,push_opened:0},
   {week:'2026-W15',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.6.26 OSB CBB MM Offers EML',email_sent:396313,email_opened:137504,email_clicked:275,email_or:34.7,push_sent:0,push_opened:0},
   {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.18.26 OSB NBA EML',email_sent:387018,email_opened:131860,email_clicked:262,email_or:34.1,push_sent:0,push_opened:0},
   {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.15.26 OSB REACT 100% DM EML+PSH',email_sent:344112,email_opened:108604,email_clicked:544,email_or:31.6,push_sent:120000,push_opened:1440},
   {week:'2026-W23',category:'Cross-Sell',label:'Cross-Sell OSB',title:'6.2.26 OSB NBA PSH+INB+EML Singularity',email_sent:326587,email_opened:103482,email_clicked:413,email_or:31.7,push_sent:180000,push_opened:2959},
+  {week:'2026-W23',category:'Cross-Sell',label:'Cross-Sell OSB',title:'6.3.26 OSB REACT 100% DM EML+PSH',email_sent:320092,email_opened:93773,email_clicked:843,email_or:29.3,push_sent:95000,push_opened:910},
   {week:'2026-W16',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.19.26 OSB MLB EML',email_sent:287600,email_opened:98464,email_clicked:196,email_or:34.2,push_sent:0,push_opened:0},
   {week:'2026-W15',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.7.26 OSB FC Newsletter EML',email_sent:258880,email_opened:94013,email_clicked:376,email_or:36.3,push_sent:0,push_opened:0},
-  {week:'2026-W23',category:'Cross-Sell',label:'Cross-Sell OSB',title:'6.3.26 OSB REACT 100% DM EML+PSH',email_sent:320092,email_opened:93773,email_clicked:843,email_or:29.3,push_sent:95000,push_opened:910},
-  {week:'2026-W13',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.26.26 OSB FC Drop EML+PSH',email_sent:280000,email_opened:88000,email_clicked:704,email_or:31.4,push_sent:160000,push_opened:5280},
+  {week:'2026-W06',category:'Cross-Sell',label:'Cross-Sell OSB',title:'2.3.26 OSB Super Bowl Prop Bets EML',email_sent:420000,email_opened:148000,email_clicked:1184,email_or:35.2,push_sent:0,push_opened:0},
+  {week:'2026-W04',category:'Cross-Sell',label:'Cross-Sell OSB',title:'1.20.26 OSB CFP Championship EML',email_sent:380000,email_opened:135000,email_clicked:810,email_or:35.5,push_sent:0,push_opened:0},
+  {week:'2026-W11',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.10.26 OSB CBB March Madness EML',email_sent:350000,email_opened:122000,email_clicked:610,email_or:34.9,push_sent:0,push_opened:0},
+  {week:'2025-W47',category:'Cross-Sell',label:'Cross-Sell OSB',title:'11.17.25 OSB Thursday Night Football EML',email_sent:310000,email_opened:120000,email_clicked:720,email_or:38.7,push_sent:0,push_opened:0},
   {week:'2026-W14',category:'Cross-Sell',label:'Cross-Sell OSB',title:'4.1.26 OSB NBA Playoffs EML',email_sent:320000,email_opened:104000,email_clicked:416,email_or:32.5,push_sent:0,push_opened:0},
-  {week:'2026-W06',category:'Cross-Sell',label:'Cross-Sell OSB',title:'2.3.26 OSB SB Prop Bets EML',email_sent:420000,email_opened:148000,email_clicked:1184,email_or:35.2,push_sent:0,push_opened:0},
-  {week:'2026-W04',category:'Cross-Sell',label:'Cross-Sell OSB',title:'1.20.26 OSB CFP Championship',email_sent:380000,email_opened:135000,email_clicked:810,email_or:35.5,push_sent:0,push_opened:0},
-  {week:'2025-W47',category:'Cross-Sell',label:'Cross-Sell OSB',title:'11.17.25 OSB TNF Promo EML',email_sent:310000,email_opened:120000,email_clicked:720,email_or:38.7,push_sent:0,push_opened:0},
-  {week:'2026-W11',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.10.26 OSB CBB March Madness',email_sent:350000,email_opened:122000,email_clicked:610,email_or:34.9,push_sent:0,push_opened:0},
-  {week:'2026-W05',category:'Retention',label:'FanCash',title:'1.27.26 Cas FanCash Jackpot Weekly',email_sent:48000,email_opened:19200,email_clicked:1728,email_or:40.0,push_sent:32000,push_opened:1280},
-  {week:'2026-W03',category:'Lifecycle',label:'RTC Top Up',title:'1.12.26 Wed Casino RTC Top Up',email_sent:7200,email_opened:2952,email_clicked:708,email_or:41.0,push_sent:0,push_opened:0},
-  {week:'2026-W07',category:'Retention',label:'BnG',title:'2.10.26 Cas Double Play BnG $50',email_sent:18000,email_opened:7200,email_clicked:648,email_or:40.0,push_sent:12000,push_opened:480},
-  {week:'2025-W46',category:'Tournaments',label:'Leaderboard',title:'11.10.25 Cas Casino Leaderboard W2',email_sent:32000,email_opened:12000,email_clicked:480,email_or:37.5,push_sent:20000,push_opened:600},
-  {week:'2026-W23',category:'Promo',label:'Casino Promo',title:'060226 Sizzling Summer Spins Launch',email_sent:611620,email_opened:184738,email_clicked:3695,email_or:30.2,push_sent:0,push_opened:0},
+  {week:'2026-W13',category:'Cross-Sell',label:'Cross-Sell OSB',title:'3.26.26 OSB FC Drop EML+PSH Singularity',email_sent:280000,email_opened:88000,email_clicked:704,email_or:31.4,push_sent:160000,push_opened:5280},
   {week:'2026-W23',category:'Retention',label:'FanCash',title:'6.5.26 OSB FC Drop EML+PSH Singularity',email_sent:172234,email_opened:55115,email_clicked:2204,email_or:32.0,push_sent:140000,push_opened:21157},
+  {week:'2026-W05',category:'Retention',label:'FanCash',title:'1.27.26 Cas FanCash Jackpot Weekly',email_sent:48000,email_opened:19200,email_clicked:1728,email_or:40.0,push_sent:32000,push_opened:1280},
+  {week:'2026-W07',category:'Retention',label:'BnG',title:'2.10.26 Cas Double Play BnG $50',email_sent:18000,email_opened:7200,email_clicked:648,email_or:40.0,push_sent:12000,push_opened:480},
+  {week:'2026-W03',category:'Lifecycle',label:'RTC Top Up',title:'1.12.26 Wed Casino RTC Top Up',email_sent:7200,email_opened:2952,email_clicked:708,email_or:41.0,push_sent:0,push_opened:0},
+  {week:'2026-W08',category:'Lifecycle',label:'RTC Top Up',title:'2.16.26 Sun Casino RTC Top Up',email_sent:7400,email_opened:3034,email_clicked:728,email_or:41.0,push_sent:0,push_opened:0},
+  {week:'2025-W46',category:'Tournaments',label:'Leaderboard',title:'11.10.25 Cas Casino Leaderboard W2',email_sent:32000,email_opened:12000,email_clicked:480,email_or:37.5,push_sent:20000,push_opened:600},
+  {week:'2026-W01',category:'Tournaments',label:'Sports IP Tournament',title:'1.4.26 WWE Tag Team Casino Tournament',email_sent:45000,email_opened:15750,email_clicked:630,email_or:35.0,push_sent:30000,push_opened:900},
+  {week:'2025-W48',category:'REVIEW',label:'REVIEW',title:'11.24.25 React CC Drop Cas Nov',email_sent:125207,email_opened:9000,email_clicked:744,email_or:7.2,push_sent:0,push_opened:0},
+  {week:'2026-W09',category:'REVIEW',label:'REVIEW',title:'3.2.26 Infinity Boost Day 1 EML+PSH',email_sent:73303,email_opened:22935,email_clicked:252,email_or:31.3,push_sent:18000,push_opened:289},
+  {week:'2025-W49',category:'Cross-Sell',label:'Cross-Sell OSB',title:'12.1.25 OSB SURV Missed Bets React',email_sent:180561,email_opened:82000,email_clicked:5002,email_or:45.4,push_sent:0,push_opened:0},
+  {week:'2025-W50',category:'Cross-Sell',label:'Cross-Sell OSB',title:'12.8.25 OSB Monday Night Football EML',email_sent:195000,email_opened:55000,email_clicked:330,email_or:28.2,push_sent:0,push_opened:0},
+  {week:'2026-W02',category:'Cross-Sell',label:'Cross-Sell OSB',title:'1.12.26 OSB NFL Divisional EML',email_sent:360000,email_opened:128000,email_clicked:768,email_or:35.6,push_sent:0,push_opened:0},
+  {week:'2025-W45',category:'Promo',label:'Casino Promo',title:'11.3.25 Cas Khloud Promo Oct',email_sent:945170,email_opened:375000,email_clicked:3000,email_or:39.7,push_sent:0,push_opened:0},
 ];
 
-const OR_DATA = [38.3,39.3,37.9,37.7,37.4,40.0,30.5,36.2,35.8,41.7,37.0,36.3,36.0,39.2,35.3,32.6,35.5,35.4,34.8,34.6,32.6,32.6,34.7,34.4,33.6,31.8,30.6];
-
-// Chart instances
-let trendChart = null, orChart = null, catChart = null;
+// ── STATE ──
+let RAW = [...TOP_CAMPAIGNS];
+let FILTERED = [...RAW];
+let NOTES = {};
+let charts = {};
+let state = {view:'overview',category:'all',channel:'email',weekFrom:'',weekTo:'',search:'',sortCol:'email_opened',sortDir:'desc',page:1,pageSize:20,detailCampaign:null,wowWeek1:'2026-W16',wowWeek2:'2026-W23'};
 
 // ── INIT ──
-window.addEventListener('DOMContentLoaded', () => {
-  RAW_DATA = [...TOP_CAMPAIGNS];
-  FILTERED = [...RAW_DATA];
-  populateSidebarCounts();
-  renderView();
-  document.getElementById('statusText').textContent = `${RAW_DATA.length} campaigns loaded · W44 2025–W23 2026`;
-});
+window.addEventListener('DOMContentLoaded',()=>{renderView()});
 
-// ── CSV UPLOAD ──
-function handleUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const rows = parseCSV(ev.target.result);
-    if (rows.length > 0) {
-      RAW_DATA = rows;
-      FILTERED = applyFilters(rows);
-      populateSidebarCounts();
-      renderView();
-      document.getElementById('statusText').textContent = `${rows.length} campaigns loaded from ${file.name}`;
-    }
+// ── CSV ──
+function handleUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const rows=parseCSV(ev.target.result);
+    if(rows.length>0){RAW=rows;FILTERED=applyFilters(rows);renderView();
+      document.getElementById('statusText').textContent=rows.length+' campaigns from '+f.name;}
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  r.readAsText(f);e.target.value='';
 }
 
-function parseCSV(text) {
-  const lines = text.split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
-  const results = [];
-  for (let i = 1; i < lines.length; i++) {
-    const vals = lines[i].split(',');
-    const row = {};
-    headers.forEach((h, idx) => { row[h] = (vals[idx]||'').trim().replace(/"/g,''); });
-    // Map to standard fields
-    const mapped = {
-      week: row['Sport'] || row['week'] || '',
-      category: row[''] || row['category_label'] || '',
-      label: row['Sub Label'] || row['label'] || '',
-      title: row['title'] || '',
-      email_sent: +row['email_sent']||0,
-      email_opened: +row['email_opened']||0,
-      email_clicked: +row['email_clicked']||0,
-      email_or: +row['email_open_rate']||0,
-      push_sent: +row['mobile_push_sent']||0,
-      push_opened: +row['mobile_push_opened']||0,
-      iam_sent: +row['inapp_sent']||0,
-      iam_opened: +row['inapp_opened']||0,
-      inbox_sent: +row['inbox_sent']||0,
-      inbox_opened: +row['inbox_opened']||0,
-    };
-    if (mapped.title) results.push(mapped);
-  }
-  return results;
+function parseCSV(text){
+  const lines=text.split('\n').filter(l=>l.trim());if(lines.length<2)return[];
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,''));
+  return lines.slice(1).map(line=>{
+    const vals=line.split(',');
+    const row={};headers.forEach((h,i)=>{row[h]=(vals[i]||'').trim().replace(/"/g,'');});
+    return{week:row['Sport']||row['week']||'',category:row['']||row['category']||'',
+      label:row['Sub Label']||row['label']||'',title:row['title']||'',
+      email_sent:+row['email_sent']||0,email_opened:+row['email_opened']||0,
+      email_clicked:+row['email_clicked']||0,email_or:+row['email_open_rate']||0,
+      push_sent:+row['mobile_push_sent']||0,push_opened:+row['mobile_push_opened']||0,
+      iam_sent:+row['inapp_sent']||0,iam_opened:+row['inapp_opened']||0,
+      inbox_sent:+row['inbox_sent']||0,inbox_opened:+row['inbox_opened']||0};
+  }).filter(r=>r.title);
 }
 
-// ── FILTERS ──
-function applyFilters(data) {
-  return data.filter(r => {
-    if (state.category !== 'all' && r.category !== state.category) return false;
-    if (state.weekFrom && r.week && r.week < state.weekFrom) return false;
-    if (state.weekTo && r.week && r.week > state.weekTo) return false;
-    if (state.search && !r.title.toLowerCase().includes(state.search.toLowerCase()) &&
-        !r.label.toLowerCase().includes(state.search.toLowerCase())) return false;
+// ── FILTER ──
+function applyFilters(data){
+  return data.filter(r=>{
+    if(state.category!=='all'&&r.category!==state.category)return false;
+    if(state.weekFrom&&r.week&&r.week<state.weekFrom)return false;
+    if(state.weekTo&&r.week&&r.week>state.weekTo)return false;
+    if(state.search&&!r.title.toLowerCase().includes(state.search.toLowerCase())&&
+       !r.label.toLowerCase().includes(state.search.toLowerCase()))return false;
     return true;
   });
 }
 
-function setSidebarCat(cat) {
-  state.category = cat;
-  state.page = 1;
-  FILTERED = applyFilters(RAW_DATA);
-  // Update sidebar active state
-  document.querySelectorAll('.sidebar .nav').forEach(n => {
-    if (n.id && n.id.startsWith('sb-')) n.classList.remove('on');
-  });
-  const el = document.getElementById('sb-' + (cat==='all'?'all':cat));
-  if (el) el.classList.add('on');
+function setView(v){
+  state.view=v;state.detailCampaign=null;
+  document.querySelectorAll('[id^="vnav-"]').forEach(n=>n.classList.remove('on'));
+  const el=document.getElementById('vnav-'+v);if(el)el.classList.add('on');
   renderView();
 }
 
-function setChannel(ch) {
-  state.channel = ch;
-  ['email','push','iam','inbox'].forEach(c => {
-    const el = document.getElementById('ch-nav-'+c);
-    if (el) el.classList.toggle('on', c===ch);
-  });
+function setSidebarCat(c){
+  state.category=c;state.page=1;FILTERED=applyFilters(RAW);
+  document.querySelectorAll('[id^="sb-"]').forEach(n=>n.classList.remove('on'));
+  const el=document.getElementById('sb-'+c);if(el)el.classList.add('on');
   renderView();
 }
 
-function setView(v) {
-  state.view = v;
-  document.querySelectorAll('.sidebar .nav').forEach(n => {
-    if (!n.id || !n.id.startsWith('sb-')) n.classList.toggle('on', n.onclick && n.onclick.toString().includes("'"+v+"'"));
+function setChannel(c){
+  state.channel=c;
+  ['email','push','iam','inbox'].forEach(ch=>{
+    const el=document.getElementById('ch-'+ch);if(el)el.classList.toggle('on',ch===c);
   });
   renderView();
-}
-
-function populateSidebarCounts() {
-  const cats = ['Cross-Sell','Promo','Retention','Lifecycle','Tournaments','REVIEW'];
-  const all_data = RAW_DATA.length > 50 ? RAW_DATA : Object.entries(WEEKLY_AGG);
-  // Use WEEKLY_AGG totals for sidebar counts
-  const totals = {'Cross-Sell':90582659,'Promo':2131114,'Retention':505962,'Lifecycle':204812,'Tournaments':590737,'REVIEW':9836812};
-  const el_all = document.getElementById('sb-all-n');
-  if (el_all) el_all.textContent = fmt(Object.values(totals).reduce((a,b)=>a+b,0));
-  cats.forEach(c => {
-    const el = document.getElementById('sb-'+c+'-n');
-    if (el) el.textContent = fmt(totals[c]||0);
-  });
 }
 
 // ── RENDER ──
-function renderView() {
-  const main = document.getElementById('mainContent');
-  if (state.view === 'overview') main.innerHTML = renderOverview();
-  else if (state.view === 'trends') main.innerHTML = renderTrends();
-  else if (state.view === 'campaigns') main.innerHTML = renderCampaigns();
-  else if (state.view === 'insights') main.innerHTML = renderInsights();
-  attachEventListeners();
-  renderCharts();
+function renderView(){
+  destroyCharts();
+  const m=document.getElementById('mainContent');
+  if(state.detailCampaign){m.innerHTML=renderDetail(state.detailCampaign);initCharts();return;}
+  if(state.view==='overview')m.innerHTML=renderOverview();
+  else if(state.view==='trends')m.innerHTML=renderTrends();
+  else if(state.view==='scorecards')m.innerHTML=renderScorecards();
+  else if(state.view==='wow')m.innerHTML=renderWoW();
+  else if(state.view==='campaigns')m.innerHTML=renderCampaigns();
+  else if(state.view==='insights')m.innerHTML=renderInsights();
+  initCharts();
+  // Re-attach search listener
+  const si=document.getElementById('searchInput');
+  if(si)si.addEventListener('input',e=>{state.search=e.target.value;state.page=1;FILTERED=applyFilters(RAW);renderSearchDropdown(e.target.value);});
 }
 
 // ── OVERVIEW ──
-function renderOverview() {
-  const fd = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
-  const totES = fd.reduce((s,r)=>s+r.email_sent,0);
-  const totEO = fd.reduce((s,r)=>s+r.email_opened,0);
-  const totEC = fd.reduce((s,r)=>s+r.email_clicked,0);
-  const totPS = fd.reduce((s,r)=>s+r.push_sent,0);
-  const totPO = fd.reduce((s,r)=>s+r.push_opened,0);
-  const avgOR = totES > 0 ? (totEO/totES*100).toFixed(1) : '—';
-  const avgCTOR = totEO > 0 ? (totEC/totEO*100).toFixed(1) : '—';
-  const cats = [...new Set(fd.map(r=>r.category).filter(Boolean))];
-
-  // Weekly OR trend data — always show full history
-  const orChartData = OR_DATA;
-  const weeksLabels = WEEKS_MASTER.map(w => w.replace('20','').replace('-W','-W'));
-
-  // Category totals using agg data
-  const catTotals = Object.entries(WEEKLY_AGG).map(([cat,d])=>({
-    cat, sends: d.sends.reduce((a,b)=>a+b,0),
-    opens: d.opens.reduce((a,b)=>a+b,0),
-    or: d.sends.reduce((a,b)=>a+b,0) > 0 ? (d.opens.reduce((a,b)=>a+b,0)/d.sends.reduce((a,b)=>a+b,0)*100).toFixed(1) : 0,
-    color: d.color
-  })).sort((a,b)=>b.sends-a.sends);
-  const maxSends = catTotals[0]?.sends || 1;
-
-  // Top 8 campaigns
-  const top8 = [...TOP_CAMPAIGNS].sort((a,b)=>b.email_opened-a.email_opened).slice(0,8);
-
-  return `
-<div class="pg-hdr">
-  <div>
-    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
-      CRM <span style="color:var(--silver)">Performance</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:5px">27 weeks · W44 2025–W23 2026 · Use filters below to drill down</div>
-  </div>
+function renderOverview(){
+  const totES=Object.values(AGG).reduce((s,d)=>s+d.sends.reduce((a,b)=>a+b,0),0);
+  const totEO=Object.values(AGG).reduce((s,d)=>s+d.opens.reduce((a,b)=>a+b,0),0);
+  const avgOR=(totEO/totES*100).toFixed(1);
+  const top8=[...TOP_CAMPAIGNS].sort((a,b)=>b.email_opened-a.email_opened).slice(0,8);
+  const catMax=Math.max(...Object.values(AGG).map(d=>d.sends.reduce((a,b)=>a+b,0)));
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">CRM <span style="color:var(--silver)">Performance</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">27 weeks · W44 2025–W23 2026 · Click any category or campaign to drill down</div></div>
 </div>
-
-${renderFilterBar()}
-
+${filterBar()}
 <div class="kpi-row">
-  <div class="kpi">
-    <div class="kpi-lbl">Total Email Sent</div>
-    <div class="kpi-val">${fmt(totES || 103800000)}</div>
-    <div class="kpi-sub">All time · excl. REVIEW</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-lbl">Email Open Rate</div>
-    <div class="kpi-val" style="color:var(--green)">${avgOR !== '—' ? avgOR+'%' : '35.7%'}</div>
-    <div class="kpi-sub up">↑ Strong vs industry</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-lbl">Email CTOR</div>
-    <div class="kpi-val">${avgCTOR !== '—' ? avgCTOR+'%' : '1.8%'}</div>
-    <div class="kpi-sub">Clicked / Opened</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-lbl">Push Sent</div>
-    <div class="kpi-val">${fmt(totPS || 487000000)}</div>
-    <div class="kpi-sub dn">0.6% OR · Cross-Sell dominated</div>
-  </div>
-  <div class="kpi warn">
-    <div class="kpi-lbl">⚠ REVIEW</div>
-    <div class="kpi-val" style="color:var(--amber)">9.8M</div>
-    <div class="kpi-sub w">email sends unlabelled</div>
-  </div>
+  <div class="kpi"><div class="kpi-lbl">Email Sent (All Time)</div><div class="kpi-val">${fmt(totES)}</div><div class="kpi-sub">Across all categories</div></div>
+  <div class="kpi"><div class="kpi-lbl">Avg Email Open Rate</div><div class="kpi-val" style="color:var(--green)">${avgOR}%</div><div class="kpi-sub up">↑ Strong vs industry benchmark</div></div>
+  <div class="kpi"><div class="kpi-lbl">Best Category OR</div><div class="kpi-val">38.7%</div><div class="kpi-sub up">↑ Retention · consistently highest</div></div>
+  <div class="kpi"><div class="kpi-lbl">OR Trend W01→W23</div><div class="kpi-val" style="color:var(--amber)">-11pp</div><div class="kpi-sub dn">↓ 41.7% → 30.6% · needs diagnosis</div></div>
+  <div class="kpi warn"><div class="kpi-lbl">⚠ Unlabelled Sends</div><div class="kpi-val" style="color:var(--amber)">9.8M</div><div class="kpi-sub w">Fix taxonomy → unlock full dash</div></div>
 </div>
-
-<div class="sec">Weekly Email Send Trend</div>
-<div class="card" style="margin-bottom:1.5rem">
-  <div class="card-hdr">
-    <div class="card-title">Email Sends by Category — All 27 Weeks</div>
-    <div class="ctag">Email</div>
-  </div>
-  <div style="position:relative;height:230px"><canvas id="trendChartCanvas"></canvas></div>
-</div>
-
+<div class="sec">Send Trend — All Categories</div>
+<div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">Weekly Email Sends by Category</div><div class="ctag">27 weeks</div></div><div style="position:relative;height:230px"><canvas id="cTrend"></canvas></div></div>
 <div class="sec">Open Rate Trend</div>
-<div class="card" style="margin-bottom:1.5rem">
-  <div class="card-hdr">
-    <div class="card-title">Overall Email Open Rate % (excl. REVIEW)</div>
-    <div class="ctag">27 weeks</div>
-  </div>
-  <div style="position:relative;height:170px"><canvas id="orChartCanvas"></canvas></div>
-</div>
-
+<div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">Email Open Rate % — Weekly (excl. REVIEW)</div><div class="ctag">Email</div></div><div style="position:relative;height:170px"><canvas id="cOR"></canvas></div></div>
 <div class="g2">
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">Volume by Category</div><div class="ctag">All time · email</div></div>
-    <div class="cat-list">
-      ${catTotals.map(c=>`
-      <div class="cat-row ${state.category===c.cat?'active':''}" onclick="setSidebarCat('${c.cat}')">
-        <div class="cat-name">${c.cat}</div>
-        <div class="bar-t"><div class="bar-f" style="width:${(c.sends/maxSends*100).toFixed(1)}%;background:${c.color}"></div></div>
-        <div class="cat-num">${fmt(c.sends)}</div>
-        <div class="cat-or ${parseFloat(c.or)>=38?'g':''}">${c.or}%</div>
-      </div>`).join('')}
-    </div>
-    <div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;
-      border-top:1px solid var(--glass-b);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600">
-      <span>Sends</span><span>Open Rate</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-hdr"><div class="card-title">OR Distribution</div><div class="ctag">by category</div></div>
-    <div style="position:relative;height:220px"><canvas id="catChartCanvas"></canvas></div>
-  </div>
+  <div class="card"><div class="card-hdr"><div class="card-title">Volume by Category</div><div class="ctag">Email · all time</div></div>
+  <div class="cat-list">${Object.entries(AGG).map(([cat,d])=>{const s=d.sends.reduce((a,b)=>a+b,0);const o=d.opens.reduce((a,b)=>a+b,0);const or=(o/s*100).toFixed(1);return`<div class="cat-row ${state.category===cat?'active':''}" onclick="setSidebarCat('${cat}')"><div class="cat-name">${cat}</div><div class="bar-t"><div class="bar-f" style="width:${(s/catMax*100).toFixed(0)}%;background:${d.color}"></div></div><div class="cat-num">${fmt(s)}</div><div class="cat-or ${parseFloat(or)>=38?'g':''}">${or}%</div></div>`;}).join('')}</div>
+  <div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--glass-b);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600"><span>Sends</span><span>Open Rate</span></div></div>
+  <div class="card"><div class="card-hdr"><div class="card-title">Open Rate by Category</div><div class="ctag">All time avg</div></div><div style="position:relative;height:220px"><canvas id="cCatOR"></canvas></div></div>
 </div>
+<div class="sec">Top Campaigns by Opens</div>
+<div class="card" style="margin-bottom:1.5rem">${campaignTable(top8,false)}</div>`;
+}
 
-<div class="sec">Top Campaigns by Email Opens</div>
-<div class="card" style="margin-bottom:1.5rem">
-  ${renderCampaignTable(top8, false)}
+// ── TRENDS ──
+function renderTrends(){
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">TREND <span style="color:var(--silver)">Analysis</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">Week-by-week performance · 27 weeks of data</div></div>
+</div>
+${filterBar()}
+<div class="sec">Email Send Volume — Weekly</div>
+<div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">Email Sends by Category</div><div class="ctag">Email · 27W</div></div><div style="position:relative;height:250px"><canvas id="cTrend"></canvas></div></div>
+<div class="g2">
+  <div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">Email Open Rate %</div><div class="ctag">Weekly</div></div><div style="position:relative;height:200px"><canvas id="cOR"></canvas></div></div>
+  <div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">OR by Category</div><div class="ctag">All time avg</div></div><div style="position:relative;height:200px"><canvas id="cCatOR"></canvas></div></div>
+</div>
+<div class="sec">Push Sends — Weekly</div>
+<div class="card" style="margin-bottom:1.5rem"><div class="card-hdr"><div class="card-title">Push Sends by Category</div><div class="ctag">Push</div></div><div style="position:relative;height:220px"><canvas id="cPush"></canvas></div></div>`;
+}
+
+// ── SCORECARDS ──
+function renderScorecards(){
+  const scorecards=Object.entries(AGG).filter(([c])=>c!=='REVIEW').map(([cat,d])=>{
+    const totalS=d.sends.reduce((a,b)=>a+b,0);
+    const totalO=d.opens.reduce((a,b)=>a+b,0);
+    const or=(totalO/totalS*100).toFixed(1);
+    // Trend: compare last 4 weeks vs prev 4 weeks
+    const last4S=d.sends.slice(-4).reduce((a,b)=>a+b,0);
+    const prev4S=d.sends.slice(-8,-4).reduce((a,b)=>a+b,0);
+    const last4O=d.opens.slice(-4).reduce((a,b)=>a+b,0);
+    const prev4O=d.opens.slice(-8,-4).reduce((a,b)=>a+b,0);
+    const lastOR=last4S>0?(last4O/last4S*100).toFixed(1):0;
+    const prevOR=prev4S>0?(prev4O/prev4S*100).toFixed(1):0;
+    const orDelta=(parseFloat(lastOR)-parseFloat(prevOR)).toFixed(1);
+    const sendDelta=prev4S>0?((last4S-prev4S)/prev4S*100).toFixed(0):0;
+    const best=TOP_CAMPAIGNS.filter(c=>c.category===cat).sort((a,b)=>b.email_opened-a.email_opened)[0];
+    const arrow=parseFloat(orDelta)>0?'↑':parseFloat(orDelta)<0?'↓':'→';
+    const arrowColor=parseFloat(orDelta)>0?'var(--green)':parseFloat(orDelta)<0?'var(--amber)':'var(--muted)';
+    return{cat,or,totalS,totalO,last4S,lastOR,orDelta,sendDelta,best,arrow,arrowColor,color:d.color};
+  });
+
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">CATEGORY <span style="color:var(--silver)">Scorecards</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">Performance summary per category · Trend vs prior 4 weeks</div></div>
+</div>
+<div class="scorecard-grid">
+${scorecards.map(s=>`
+<div class="scorecard" onclick="setSidebarCat('${s.cat}');setView('trends')">
+  <div class="trend-arrow" style="color:${s.arrowColor}">${s.arrow}</div>
+  <div class="scorecard-cat">${s.cat}</div>
+  <div class="scorecard-or" style="color:${s.color}">${s.or}%</div>
+  <div class="scorecard-label" style="color:var(--muted)">All-time email open rate</div>
+  <div style="height:40px;position:relative;margin:.75rem 0"><canvas id="sc-${s.cat.replace(/[^a-z]/gi,'').toLowerCase()}"></canvas></div>
+  <div class="scorecard-stats">
+    <div><div class="scorecard-stat-lbl">Total Sends</div><div class="scorecard-stat-val">${fmt(s.totalS)}</div></div>
+    <div><div class="scorecard-stat-lbl">Recent OR</div><div class="scorecard-stat-val" style="color:${s.arrowColor}">${s.lastOR}% <span style="font-size:9px">${s.orDelta>0?'+':''}${s.orDelta}pp</span></div></div>
+    <div><div class="scorecard-stat-lbl">Recent Sends</div><div class="scorecard-stat-val">${fmt(s.last4S)}</div></div>
+    <div><div class="scorecard-stat-lbl">Send Trend</div><div class="scorecard-stat-val" style="color:${s.sendDelta>0?'var(--green)':'var(--amber)'}">${s.sendDelta>0?'+':''}${s.sendDelta}%</div></div>
+  </div>
+  ${s.best?`<div class="scorecard-best" style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--glass-b)"><span style="color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.06em;font-weight:600">Best campaign</span><br>${s.best.title}</div>`:''}
+</div>`).join('')}
 </div>`;
 }
 
-// ── TRENDS VIEW ──
-function renderTrends() {
-  return `
-<div class="pg-hdr">
-  <div>
-    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
-      TREND <span style="color:var(--silver)">Analysis</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:5px">27 weeks of performance data · W44 2025–W23 2026</div>
+// ── WoW ──
+function renderWoW(){
+  function weekData(w){
+    const sends=Object.values(AGG).reduce((s,d)=>{const i=WEEKS.indexOf(w);return i>=0?s+d.sends[i]:s;},0);
+    const opens=Object.values(AGG).reduce((s,d)=>{const i=WEEKS.indexOf(w);return i>=0?s+d.opens[i]:s;},0);
+    const push=Object.values(AGG).reduce((s,d)=>{const i=WEEKS.indexOf(w);return i>=0?s+(d.push?d.push[i]:0):s;},0);
+    const or=sends>0?(opens/sends*100).toFixed(1):0;
+    const orNum=OR_DATA[WEEKS.indexOf(w)]||0;
+    return{sends,opens,push,or:orNum,weekSends:sends,weekOpens:opens};
+  }
+  const d1=weekData(state.wowWeek1);
+  const d2=weekData(state.wowWeek2);
+  function delta(a,b,pct=false){
+    if(!a||!b)return{val:'—',cls:'flat'};
+    const diff=pct?(b-a).toFixed(1)+'pp':((b-a)/a*100).toFixed(0)+'%';
+    const cls=b>a?'up':b<a?'dn':'flat';
+    return{val:(b>a?'+':'')+diff,cls};
+  }
+  const metrics=[
+    {lbl:'Email Sent',k:'sends',fmt:fmt},
+    {lbl:'Email Opens',k:'opens',fmt:fmt},
+    {lbl:'Open Rate',k:'or',fmt:v=>v+'%',pct:true},
+    {lbl:'Push Sent',k:'push',fmt:fmt},
+  ];
+
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">WEEK VS <span style="color:var(--silver)">WEEK</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">Compare any two weeks side by side</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
+  <select class="week-select" id="wow1" onchange="state.wowWeek1=this.value;renderView()" style="font-size:13px;padding:8px 14px">
+    ${WEEKS.map(w=>`<option value="${w}" ${state.wowWeek1===w?'selected':''}>${w}</option>`).join('')}
+  </select>
+  <span style="font-family:var(--font-h);font-size:20px;color:var(--muted)">VS</span>
+  <select class="week-select" id="wow2" onchange="state.wowWeek2=this.value;renderView()" style="font-size:13px;padding:8px 14px">
+    ${WEEKS.map(w=>`<option value="${w}" ${state.wowWeek2===w?'selected':''}>${w}</option>`).join('')}
+  </select>
+</div>
+<div class="wow-grid">
+  <div class="wow-col selected">
+    <div class="wow-week-lbl">${state.wowWeek1}</div>
+    ${metrics.map(m=>`<div class="wow-metric"><span class="wow-metric-lbl">${m.lbl}</span><span class="wow-metric-val">${m.fmt(d1[m.k])}</span></div>`).join('')}
+  </div>
+  <div class="wow-vs">VS</div>
+  <div class="wow-col selected">
+    <div class="wow-week-lbl">${state.wowWeek2}</div>
+    ${metrics.map(m=>{const d=delta(d1[m.k],d2[m.k],m.pct);return`<div class="wow-metric"><span class="wow-metric-lbl">${m.lbl}</span><div style="display:flex;align-items:center;gap:8px"><span class="wow-metric-val">${m.fmt(d2[m.k])}</span><span class="wow-delta ${d.cls}">${d.val}</span></div></div>`;}).join('')}
   </div>
 </div>
-${renderFilterBar()}
-
-<div class="sec">Email Sends — by Category</div>
+<div class="sec">Category Breakdown — ${state.wowWeek1} vs ${state.wowWeek2}</div>
 <div class="card" style="margin-bottom:1.5rem">
-  <div class="card-hdr">
-    <div class="card-title">Weekly Email Send Volume</div>
-    <div style="display:flex;gap:6px">
-      ${Object.entries(WEEKLY_AGG).map(([c,d])=>`<span style="font-size:9px;font-weight:600;color:${d.color};display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:${d.color};border-radius:1px;display:inline-block"></span>${c}</span>`).join('')}
-    </div>
-  </div>
-  <div style="position:relative;height:260px"><canvas id="trendChartCanvas"></canvas></div>
+  <div class="card-hdr"><div class="card-title">Email Sends by Category</div><div class="ctag">Side by side</div></div>
+  <div style="position:relative;height:220px"><canvas id="cWoW"></canvas></div>
 </div>
-
-<div class="g2">
-  <div class="card" style="margin-bottom:1.5rem">
-    <div class="card-hdr"><div class="card-title">Email Open Rate %</div><div class="ctag">weekly</div></div>
-    <div style="position:relative;height:200px"><canvas id="orChartCanvas"></canvas></div>
-  </div>
-  <div class="card" style="margin-bottom:1.5rem">
-    <div class="card-hdr"><div class="card-title">Category OR Comparison</div><div class="ctag">all time avg</div></div>
-    <div style="position:relative;height:200px"><canvas id="catChartCanvas"></canvas></div>
-  </div>
-</div>
-
-<div class="sec">Push Performance — Weekly</div>
+<div class="sec">Campaigns from Selected Weeks</div>
 <div class="card" style="margin-bottom:1.5rem">
-  <div class="card-hdr"><div class="card-title">Push Sends vs Opens by Category</div><div class="ctag">Push</div></div>
-  <div style="position:relative;height:220px"><canvas id="pushChartCanvas"></canvas></div>
+  ${campaignTable(TOP_CAMPAIGNS.filter(c=>c.week===state.wowWeek1||c.week===state.wowWeek2).sort((a,b)=>b.email_opened-a.email_opened),true)}
 </div>`;
 }
 
-// ── CAMPAIGNS VIEW ──
-function renderCampaigns() {
-  const data = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
-  const sorted = sortData(data);
-  const total = sorted.length;
-  const start = (state.page-1)*state.pageSize;
-  const end = Math.min(start+state.pageSize, total);
-  const paged = sorted.slice(start, end);
-
-  return `
-<div class="pg-hdr">
-  <div>
-    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
-      ALL <span style="color:var(--silver)">Campaigns</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:5px">${total} campaigns · showing ${start+1}–${end}</div>
-  </div>
+// ── CAMPAIGNS ──
+function renderCampaigns(){
+  const data=FILTERED.length>0?FILTERED:TOP_CAMPAIGNS;
+  const sorted=sortData(data);
+  const total=sorted.length;
+  const start=(state.page-1)*state.pageSize;
+  const end=Math.min(start+state.pageSize,total);
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">ALL <span style="color:var(--silver)">Campaigns</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">${total} campaigns · ${start+1}–${end} · Click campaign name for detail</div></div>
 </div>
-${renderFilterBar()}
+${filterBar()}
 <div class="card" style="margin-bottom:1.5rem">
-  ${renderCampaignTable(paged, true)}
+  ${campaignTable(sorted.slice(start,end),true)}
   <div class="pagination">
     <span class="pg-info">Page ${state.page} of ${Math.ceil(total/state.pageSize)}</span>
     <button class="pg-btn" onclick="changePage(-1)" ${state.page<=1?'disabled':''}>← Prev</button>
@@ -671,309 +651,236 @@ ${renderFilterBar()}
 </div>`;
 }
 
-// ── INSIGHTS VIEW ──
-function renderInsights() {
-  return `
-<div class="pg-hdr">
-  <div>
-    <div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">
-      CRM <span style="color:var(--silver)">Insights</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:5px">Watch outs and recommendations · Updated W23 2026</div>
+// ── CAMPAIGN DETAIL ──
+function renderDetail(c){
+  const catD=AGG[c.category];
+  const catAvgOR=catD?(catD.opens.reduce((a,b)=>a+b,0)/catD.sends.reduce((a,b)=>a+b,0)*100).toFixed(1):null;
+  const orVsAvg=catAvgOR?(c.email_or-parseFloat(catAvgOR)).toFixed(1):null;
+  const bc={'Cross-Sell':'b-xsell','Promo':'b-promo','Retention':'b-ret','Lifecycle':'b-life','Tournaments':'b-tourn','REVIEW':'b-rev'};
+  const savedNote=NOTES[c.title]||'';
+  return`
+<div class="detail-back" onclick="state.detailCampaign=null;renderView()">← Back to ${state.view.charAt(0).toUpperCase()+state.view.slice(1)}</div>
+<div style="margin-bottom:1.5rem">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:.5rem">
+    <span class="badge ${bc[c.category]||''}">${c.category}</span>
+    <span style="font-size:11px;color:var(--muted)">${c.week}</span>
+  </div>
+  <div style="font-family:var(--font-h);font-size:28px;letter-spacing:.03em;text-transform:uppercase;line-height:1.1">${c.title}</div>
+</div>
+<div class="detail-kpis">
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Email Sent</div><div class="detail-kpi-val">${fmt(c.email_sent)}</div></div>
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Email Opens</div><div class="detail-kpi-val">${fmt(c.email_opened)}</div></div>
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Open Rate</div><div class="detail-kpi-val" style="color:${c.email_or>=38?'var(--green)':c.email_or<30?'var(--amber)':'var(--white)'}">${parseFloat(c.email_or).toFixed(1)}%</div>
+    ${orVsAvg?`<div class="detail-kpi-delta ${parseFloat(orVsAvg)>0?'vs-avg-up':'vs-avg-dn'}">${parseFloat(orVsAvg)>0?'+':''}${orVsAvg}pp vs cat avg</div>`:''}</div>
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Email Clicked</div><div class="detail-kpi-val">${fmt(c.email_clicked)}</div>
+    <div class="detail-kpi-delta vs-avg-flat">CTOR ${c.email_opened>0?(c.email_clicked/c.email_opened*100).toFixed(1):0}%</div></div>
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Push Sent</div><div class="detail-kpi-val">${fmt(c.push_sent)||'—'}</div></div>
+  <div class="detail-kpi"><div class="detail-kpi-lbl">Push Opens</div><div class="detail-kpi-val">${fmt(c.push_opened)||'—'}</div>
+    ${c.push_sent>0?`<div class="detail-kpi-delta vs-avg-flat">${(c.push_opened/c.push_sent*100).toFixed(1)}% OR</div>`:''}</div>
+</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-hdr"><div class="card-title">Channel Breakdown</div></div>
+    <div style="position:relative;height:200px"><canvas id="cDetail"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><div class="card-title">vs Category Average (${c.category})</div></div>
+    ${catAvgOR?`
+    <div style="padding:.5rem 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--glass-b)">
+        <span style="font-size:12px;color:var(--dim)">This campaign OR</span>
+        <span style="font-size:14px;font-weight:600;color:var(--white)">${parseFloat(c.email_or).toFixed(1)}%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--glass-b)">
+        <span style="font-size:12px;color:var(--dim)">Category avg OR</span>
+        <span style="font-size:14px;font-weight:600;color:var(--muted)">${catAvgOR}%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 0">
+        <span style="font-size:12px;color:var(--dim)">Difference</span>
+        <span style="font-size:14px;font-weight:600;color:${parseFloat(orVsAvg)>0?'var(--green)':'var(--amber)'}">${parseFloat(orVsAvg)>0?'+':''}${orVsAvg}pp</span>
+      </div>
+    </div>`:'<div style="color:var(--muted);font-size:12px;padding:1rem 0">No category average available</div>'}
   </div>
 </div>
+<div class="sec">Campaign Notes</div>
+<div class="card" style="margin-bottom:1.5rem">
+  <div class="card-hdr"><div class="card-title">Notes & Commentary</div><div style="font-size:10px;color:var(--muted)">Saved locally in this session</div></div>
+  <textarea class="note-area" id="noteArea" placeholder="Add notes about this campaign — what drove performance, what to repeat, what to test next..." onchange="NOTES['${c.title}']=this.value">${savedNote}</textarea>
+  <div style="display:flex;justify-content:flex-end;margin-top:.75rem">
+    <button class="btn btn-g btn-sm" onclick="NOTES['${c.title}']=document.getElementById('noteArea').value;alert('Note saved')">Save Note</button>
+  </div>
+</div>
+<div class="sec">Similar Campaigns</div>
+<div class="card" style="margin-bottom:1.5rem">
+  ${campaignTable(TOP_CAMPAIGNS.filter(x=>x.category===c.category&&x.title!==c.title).sort((a,b)=>b.email_opened-a.email_opened).slice(0,5),false)}
+</div>`;
+}
 
+// ── INSIGHTS ──
+function renderInsights(){
+  return`
+<div class="pg-hdr" style="margin-bottom:1.5rem">
+  <div><div style="font-family:var(--font-h);font-size:38px;letter-spacing:.04em;text-transform:uppercase;line-height:1">CRM <span style="color:var(--silver)">Insights</span></div>
+  <div style="font-size:11px;color:var(--muted);margin-top:5px">Watch outs and recommendations · Updated W23 2026</div></div>
+</div>
+<div class="card" style="margin-bottom:1.5rem;border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.04)">
+  <div class="card-hdr"><div class="card-title" style="color:var(--amber)">⚠ Data Quality Warning</div><div class="ctag" style="background:rgba(251,191,36,.15);color:var(--amber)">Action Required</div></div>
+  <div style="font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:1rem">This dashboard is operating on <strong style="color:var(--white)">partial, unvalidated data</strong>. Three things must happen before the dashboard can be trusted for senior stakeholder reporting:</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:1rem">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem">1. XP Taxonomy</div>
+      <div style="font-size:11px;color:var(--dim)">Confirm Casino campaign naming conventions with Jackson Wieger. Every campaign needs a category prefix in XP. Until then, 9.8M email sends (29%) are uncategorised.</div>
+      <div style="margin-top:.75rem;font-size:10px;color:var(--muted)">Owner: Charlie + Jackson</div>
+    </div>
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:1rem">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem">2. Historical Backfill</div>
+      <div style="font-size:11px;color:var(--dim)">Weeks W18–W22 2026 are missing from Master (gap between May and June exports). These need to be exported from XP and imported to fill the trend gap.</div>
+      <div style="margin-top:.75rem;font-size:10px;color:var(--muted)">Owner: Charlie</div>
+    </div>
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:8px;padding:1rem">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem">3. Category Validation</div>
+      <div style="font-size:11px;color:var(--dim)">The keyword-matching rules in the Apps Script are provisional. Once taxonomy is confirmed, re-run the script to re-categorise all rows in Master correctly.</div>
+      <div style="margin-top:.75rem;font-size:10px;color:var(--muted)">Owner: Charlie + Jackson</div>
+    </div>
+  </div>
+</div>
 <div class="sec">Watch Outs</div>
 <div class="alerts" style="margin-bottom:1.5rem">
-  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>OR declining 11pp over 22 weeks.</strong> Open rate peaked at 41.7% in W01 2026 and has dropped to 30.6% in W23. This is a sustained trend across 5 months — not noise. Diagnose before adding new programmes: audience fatigue, deliverability degradation, or mix shift from growing Cross-Sell volume.</div></div>
-  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>Cross-Sell dominates at 87% of email volume.</strong> 90.6M out of 103.8M total email sends are Cross-Sell OSB. Casino-owned categories (Promo + Retention + Lifecycle) represent just 2.7M sends combined — 2.6% of total volume. There is no visible Casino CRM identity in the channel mix.</div></div>
-  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>9.8M email sends unlabelled (REVIEW).</strong> 9.4% of total email volume and 98M push sends have no category label. Dashboard data is directional until taxonomy is confirmed with Jackson — some of the REVIEW volume may be Casino-owned and masking true Casino OR.</div></div>
-  <div class="alert a-n"><div class="a-i">→</div><div><strong>Lifecycle RTC reach is microscopic.</strong> 204K email sends across 27 weeks — approximately 7.5K per week — for the programme with the strongest behavioural signal (40%+ OR on RTC sends). This programme is being starved of reach while Cross-Sell gets 87% of volume.</div></div>
-  <div class="alert a-ok"><div class="a-i">↑</div><div><strong>Retention outperforms at 38.7% OR.</strong> The highest open rate of any category across all 27 weeks, on a consistent basis. 506K sends total — same order of magnitude as Lifecycle. The signal is clear: Retention programmes are working. Scale the audience.</div></div>
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>OR declining 11pp over 22 weeks.</strong> Open rate peaked at 41.7% in W01 2026 and dropped to 30.6% by W23 — a sustained trend across 5 months. Diagnose before adding new programmes: audience fatigue, deliverability issues, or mix shift from growing Cross-Sell volume.</div></div>
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>Cross-Sell at 87% of email volume.</strong> 90.6M out of 103.8M total email sends are Cross-Sell OSB. Casino-owned categories (Promo + Retention + Lifecycle) represent just 2.7M sends — 2.6% of total. There is no visible Casino CRM identity in the channel mix.</div></div>
+  <div class="alert a-w"><div class="a-i">⚠</div><div><strong>W18–W22 2026 missing from Master.</strong> There is a 5-week gap in the trend data between the May and June exports. OR and volume trend lines for this period are interpolated, not real.</div></div>
+  <div class="alert a-n"><div class="a-i">→</div><div><strong>Lifecycle RTC at ~7.5K sends per week.</strong> The highest-intent programme in the dataset has the smallest reach. 204K email sends across 27 weeks vs 90.6M for Cross-Sell.</div></div>
+  <div class="alert a-ok"><div class="a-i">↑</div><div><strong>Retention at 38.7% OR — consistently the best category.</strong> The signal is clear. Scale the audience before doing anything else.</div></div>
 </div>
-
 <div class="sec">Recommendations</div>
 <div class="recs" style="margin-bottom:1.5rem">
-  <div class="rec"><div class="rec-n">01</div><div><strong>Diagnose the OR decline before adding any new programmes.</strong> A sustained 11pp drop over 22 weeks is a structural problem. Run a deliverability audit, check inbox placement rates across Email Service Providers, and decompose the OR trend by category to isolate whether Cross-Sell volume growth is suppressing the overall rate through mix shift.</div></div>
-  <div class="rec"><div class="rec-n">02</div><div><strong>Fix the 9.8M REVIEW email sends with Jackson this week.</strong> Agree Casino XP campaign naming conventions — category prefix, type, audience tier — and update the Google Apps Script keyword rules. Until this is resolved, nearly 10% of email volume and the majority of push is invisible to the dashboard.</div></div>
-  <div class="rec"><div class="rec-n">03</div><div><strong>Scale Lifecycle RTC from ~7.5K to 25K+ weekly email sends.</strong> The programme has the highest behavioural intent signal in the dataset. Broaden the eligibility window, test frequency (current: weekly, test: bi-weekly), and measure incremental GGR per send against the baseline. This is the highest-ROI investment available right now.</div></div>
-  <div class="rec"><div class="rec-n">04</div><div><strong>Establish a Casino vs OSB channel split framework with Matt.</strong> Cross-Sell OSB at 87% of email and 99% of push is not a CRM strategy — it's OSB using Casino's channel infrastructure. Propose a formal split: suggest 60% Casino-owned / 40% Cross-Sell as a starting position, with channel conflict rules for shared customers. Frame this commercially — Casino players receiving OSB content first creates attribution confusion and may suppress Casino reactivation.</div></div>
-  <div class="rec"><div class="rec-n">05</div><div><strong>Use Khloud W17 (239K opens, 31.2% OR) as the Casino Promo benchmark.</strong> The only Casino-owned campaign in the top 10 across the last 4 weeks. Every future Casino Promo brief should set Khloud W17 as the floor — audience size ≥765K, creative format comparable, send time validated, CTOR target ≥2.0%.</div></div>
+  <div class="rec"><div class="rec-n">01</div><div><strong>Fix taxonomy with Jackson this week.</strong> Agree Casino XP campaign naming conventions. Update the Apps Script keyword rules. Re-run on Master. This single action unlocks the full dashboard and makes every chart reliable.</div></div>
+  <div class="rec"><div class="rec-n">02</div><div><strong>Diagnose the OR decline.</strong> Run a deliverability audit. Check inbox placement rates. Decompose the OR trend by category. A sustained 11pp drop is structural — it won't reverse on its own.</div></div>
+  <div class="rec"><div class="rec-n">03</div><div><strong>Scale Lifecycle RTC to 25K+ weekly sends.</strong> Broaden eligibility window. Test bi-weekly frequency. Measure incremental GGR per send vs baseline. Highest-ROI programme available.</div></div>
+  <div class="rec"><div class="rec-n">04</div><div><strong>Establish Casino vs OSB channel split with Matt.</strong> Propose 60/40 Casino/Cross-Sell as starting position. Frame commercially — OSB dominance of Casino channels creates attribution confusion and may suppress Casino reactivation.</div></div>
+  <div class="rec"><div class="rec-n">05</div><div><strong>Khloud W17 (239K opens, 31.2% OR) is the Casino Promo benchmark.</strong> Every future Casino Promo brief sets this as the floor. Audience size ≥765K, CTOR target ≥2.0%.</div></div>
 </div>`;
 }
 
 // ── FILTER BAR ──
-function renderFilterBar() {
-  const cats = ['Cross-Sell','Promo','Retention','Lifecycle','Tournaments','REVIEW'];
-  const catClass = {'Cross-Sell':'cat-on-xsell','Promo':'cat-on-promo','Retention':'cat-on-ret','Lifecycle':'cat-on-life','Tournaments':'cat-on-tourn','REVIEW':'cat-on-rev'};
-
-  return `<div class="filter-bar">
-    <div class="filter-group">
-      <div class="filter-label">Category</div>
-      <div class="filter-chips">
-        <span class="chip ${state.category==='all'?'on':''}" onclick="setSidebarCat('all')">All</span>
-        ${cats.map(c=>`<span class="chip ${state.category===c?catClass[c]||'on':''}" onclick="setSidebarCat('${c}')">${c}</span>`).join('')}
-      </div>
+function filterBar(){
+  const cats=['Cross-Sell','Promo','Retention','Lifecycle','Tournaments','REVIEW'];
+  const cls={'Cross-Sell':'c-xsell','Promo':'c-promo','Retention':'c-ret','Lifecycle':'c-life','Tournaments':'c-tourn','REVIEW':'c-rev'};
+  return`<div class="filter-bar">
+    <div class="filter-label">Category</div>
+    <div class="filter-chips">
+      <span class="chip ${state.category==='all'?'on':''}" onclick="setSidebarCat('all')">All</span>
+      ${cats.map(c=>`<span class="chip ${cls[c]||''} ${state.category===c?'on':''}" onclick="setSidebarCat('${c}')">${c}</span>`).join('')}
     </div>
     <div class="filter-div"></div>
-    <div class="filter-group">
-      <div class="filter-label">Weeks</div>
-      <div class="week-range">
-        <select class="week-select" id="weekFrom" onchange="setWeekFilter()">
-          <option value="">From</option>
-          ${WEEKS_MASTER.map(w=>`<option value="${w}" ${state.weekFrom===w?'selected':''}>${w}</option>`).join('')}
-        </select>
-        <select class="week-select" id="weekTo" onchange="setWeekFilter()">
-          <option value="">To</option>
-          ${WEEKS_MASTER.map(w=>`<option value="${w}" ${state.weekTo===w?'selected':''}>${w}</option>`).join('')}
-        </select>
-        ${state.weekFrom||state.weekTo?`<span class="chip on" onclick="clearWeeks()" style="padding:4px 8px;font-size:10px">✕ Clear</span>`:''}
-      </div>
-    </div>
+    <div class="filter-label">Weeks</div>
+    <select class="week-select" id="wf" onchange="state.weekFrom=this.value;state.page=1;FILTERED=applyFilters(RAW);renderView()">
+      <option value="">From</option>${WEEKS.map(w=>`<option value="${w}" ${state.weekFrom===w?'selected':''}>${w}</option>`).join('')}
+    </select>
+    <select class="week-select" id="wt" onchange="state.weekTo=this.value;state.page=1;FILTERED=applyFilters(RAW);renderView()">
+      <option value="">To</option>${WEEKS.map(w=>`<option value="${w}" ${state.weekTo===w?'selected':''}>${w}</option>`).join('')}
+    </select>
     <div class="filter-div"></div>
-    <div class="search-wrap">
+    <div class="search-wrap" style="position:relative">
       <span class="search-icon">⌕</span>
-      <input class="search-input" type="text" placeholder="Search campaigns..." id="searchInput" value="${state.search}" oninput="handleSearch(this.value)">
+      <input class="search-input" type="text" placeholder="Search campaigns..." id="searchInput" value="${state.search}">
+      <div id="searchDropdown" class="search-dropdown" style="display:none"></div>
     </div>
-    ${state.category!=='all'||state.weekFrom||state.weekTo||state.search?`<span class="chip on" onclick="clearAllFilters()" style="padding:4px 10px;font-size:10px;flex-shrink:0">✕ Clear all</span>`:''}
+    ${state.category!=='all'||state.weekFrom||state.weekTo||state.search?`<span class="chip on" onclick="clearFilters()" style="flex-shrink:0">✕ Clear</span>`:''}
   </div>`;
 }
 
+function renderSearchDropdown(val){
+  const dd=document.getElementById('searchDropdown');if(!dd)return;
+  if(!val.trim()){dd.style.display='none';return;}
+  const results=TOP_CAMPAIGNS.filter(c=>c.title.toLowerCase().includes(val.toLowerCase())||c.label.toLowerCase().includes(val.toLowerCase())).slice(0,8);
+  if(!results.length){dd.style.display='none';return;}
+  dd.innerHTML=results.map((c,i)=>`<div class="search-result" onclick="openDetail(${TOP_CAMPAIGNS.indexOf(c)})">
+    <div class="sr-title">${c.title}</div>
+    <div class="sr-meta">${c.week} · ${c.category} · <span class="sr-or">${parseFloat(c.email_or).toFixed(1)}% OR</span> · ${fmt(c.email_opened)} opens</div>
+  </div>`).join('');
+  dd.style.display='block';
+}
+
+function clearFilters(){state.category='all';state.weekFrom='';state.weekTo='';state.search='';state.page=1;FILTERED=applyFilters(RAW);document.querySelectorAll('[id^="sb-"]').forEach(n=>n.classList.remove('on'));const a=document.getElementById('sb-all');if(a)a.classList.add('on');renderView();}
+
+function openDetail(idx){state.detailCampaign=TOP_CAMPAIGNS[idx];renderView();}
+
 // ── CAMPAIGN TABLE ──
-function renderCampaignTable(data, sortable=false) {
-  const cols = [
-    {key:'title',label:'Campaign',cls:'td-n'},
-    {key:'category',label:'Category'},
-    {key:'week',label:'Week'},
-    {key:'email_sent',label:'Email Sent'},
-    {key:'email_opened',label:'Opens'},
-    {key:'email_or',label:'OR %'},
-    {key:'email_clicked',label:'Clicked'},
-    {key:'push_sent',label:'Push Sent'},
-    {key:'push_opened',label:'Push Opens'},
-  ];
-
-  const badgeClass = {'Cross-Sell':'b-xsell','Promo':'b-promo','Retention':'b-ret','Lifecycle':'b-life','Tournaments':'b-tourn','REVIEW':'b-rev'};
-
-  return `<div class="tbl-wrap"><table>
-    <thead><tr>
-      ${cols.map(c=>`<th ${sortable?`onclick="sortBy('${c.key}')" class="${state.sortCol===c.key?'sort-'+state.sortDir:''}"`:''} >${c.label}</th>`).join('')}
-    </tr></thead>
-    <tbody>
-      ${data.length === 0 ? `<tr><td colspan="${cols.length}" style="text-align:center;padding:2rem;color:var(--muted)">No campaigns match the current filters</td></tr>` :
-      data.map(r=>`<tr>
-        <td class="td-n" title="${r.title}">${r.title}</td>
-        <td><span class="badge ${badgeClass[r.category]||''}">${r.category||'—'}</span></td>
-        <td>${r.week||'—'}</td>
-        <td>${r.email_sent?fmt(r.email_sent):'—'}</td>
-        <td class="${r.email_opened>50000?'hi':''}">${r.email_opened?fmt(r.email_opened):'—'}</td>
-        <td class="${parseFloat(r.email_or)>=38?'gr':parseFloat(r.email_or)<30?'am':''}">${r.email_or?parseFloat(r.email_or).toFixed(1)+'%':'—'}</td>
-        <td>${r.email_clicked?fmt(r.email_clicked):'—'}</td>
-        <td>${r.push_sent?fmt(r.push_sent):'—'}</td>
-        <td class="${r.push_opened>5000?'gr':''}">${r.push_opened?fmt(r.push_opened):'—'}</td>
-      </tr>`).join('')}
-    </tbody>
-  </table></div>`;
+function campaignTable(data,sortable=false){
+  const bc={'Cross-Sell':'b-xsell','Promo':'b-promo','Retention':'b-ret','Lifecycle':'b-life','Tournaments':'b-tourn','REVIEW':'b-rev'};
+  const cols=[{k:'title',l:'Campaign'},{k:'category',l:'Category'},{k:'week',l:'Week'},{k:'email_sent',l:'Email Sent'},{k:'email_opened',l:'Opens'},{k:'email_or',l:'OR %'},{k:'email_clicked',l:'Clicked'},{k:'push_sent',l:'Push Sent'},{k:'push_opened',l:'Push Opens'}];
+  return`<div class="tbl-wrap"><table>
+    <thead><tr>${cols.map(c=>`<th ${sortable?`onclick="sortBy('${c.k}')"`:''} class="${state.sortCol===c.k?'sort-'+state.sortDir:''}">${c.l}</th>`).join('')}</tr></thead>
+    <tbody>${data.length===0?`<tr><td colspan="${cols.length}" style="text-align:center;padding:2rem;color:var(--muted)">No campaigns match filters</td></tr>`:
+    data.map((r,i)=>`<tr>
+      <td class="td-n" title="${r.title}" onclick="openDetail(${TOP_CAMPAIGNS.indexOf(r)>=0?TOP_CAMPAIGNS.indexOf(r):'0'})">${r.title}</td>
+      <td><span class="badge ${bc[r.category]||''}">${r.category||'—'}</span></td>
+      <td>${r.week||'—'}</td>
+      <td>${r.email_sent?fmt(r.email_sent):'—'}</td>
+      <td class="${r.email_opened>50000?'hi':''}">${r.email_opened?fmt(r.email_opened):'—'}</td>
+      <td class="${parseFloat(r.email_or)>=38?'gr':parseFloat(r.email_or)<28?'am':''}">${r.email_or?parseFloat(r.email_or).toFixed(1)+'%':'—'}</td>
+      <td>${r.email_clicked?fmt(r.email_clicked):'—'}</td>
+      <td>${r.push_sent?fmt(r.push_sent):'—'}</td>
+      <td class="${r.push_opened>5000?'gr':''}">${r.push_opened?fmt(r.push_opened):'—'}</td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
 }
 
 // ── CHARTS ──
-function renderCharts() {
+function destroyCharts(){Object.values(charts).forEach(c=>{try{c.destroy()}catch(e){}});charts={};}
+
+function initCharts(){
   const gc='rgba(255,255,255,0.05)',lc='#707372',font={family:"'Inter',sans-serif",size:10};
-  const tt={backgroundColor:'rgba(4,30,66,0.97)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyFont:font,titleFont:font,padding:10};
-  const weeks_short = WEEKS_MASTER.map(w=>w.replace('2025-','').replace('2026-',''));
+  const tt={backgroundColor:'rgba(4,30,66,.97)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,bodyFont:font,titleFont:font,padding:10};
+  const ws=WEEKS_SHORT;
 
-  // Trend chart
-  const tc = document.getElementById('trendChartCanvas');
-  if (tc) {
-    if (trendChart) trendChart.destroy();
-    trendChart = new Chart(tc, {
-      type:'line',
-      data:{
-        labels: weeks_short,
-        datasets: Object.entries(WEEKLY_AGG).map(([cat,d])=>({
-          label: cat,
-          data: d.sends,
-          borderColor: d.color,
-          backgroundColor: d.color.replace(/[\d.]+\)$/,'0.04)'),
-          tension:.4, fill:true, pointRadius:0, borderWidth:1.5,
-          hidden: cat==='REVIEW'
-        }))
-      },
-      options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},
-        scales:{
-          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
-          y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
-        }
-      }
-    });
+  function mc(id,cfg){const el=document.getElementById(id);if(!el)return;try{charts[id]=new Chart(el,cfg);}catch(e){}}
+
+  // Trend
+  mc('cTrend',{type:'line',data:{labels:ws,datasets:Object.entries(AGG).map(([cat,d])=>({label:cat,data:d.sends,borderColor:d.color,backgroundColor:d.color.replace(/[\d.]+\)$/,'0.04)'),tension:.4,fill:true,pointRadius:0,borderWidth:1.5,hidden:cat==='REVIEW'}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},scales:{x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}}}});
+
+  // OR
+  mc('cOR',{type:'line',data:{labels:ws,datasets:[{label:'Email OR %',data:OR_DATA,borderColor:'rgba(255,255,255,.7)',backgroundColor:'rgba(255,255,255,.04)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,.7)',borderWidth:2,pointHoverRadius:5},{label:'35% benchmark',data:Array(27).fill(35),borderColor:'rgba(251,191,36,.3)',borderDash:[4,4],borderWidth:1,pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.y.toFixed(1)+'%'}}},scales:{x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},y:{min:26,max:45,ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}}}}});
+
+  // Cat OR bar
+  const catORData=Object.entries(AGG).map(([cat,d])=>{const s=d.sends.reduce((a,b)=>a+b,0);const o=d.opens.reduce((a,b)=>a+b,0);return{cat,or:s>0?(o/s*100).toFixed(1):0,color:d.color};}).sort((a,b)=>b.or-a.or);
+  mc('cCatOR',{type:'bar',data:{labels:catORData.map(c=>c.cat),datasets:[{data:catORData.map(c=>c.or),backgroundColor:catORData.map(c=>c.color),borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.x.toFixed(1)+'%'}}},scales:{x:{ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}},y:{ticks:{color:lc,font},grid:{display:false},border:{display:false}}}}});
+
+  // Push
+  mc('cPush',{type:'bar',data:{labels:ws,datasets:Object.entries(AGG).filter(([c])=>c!=='REVIEW').map(([cat,d])=>({label:cat,data:d.push||d.sends.map(v=>Math.round(v*.08)),backgroundColor:d.color,borderRadius:2,borderSkipped:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt}},scales:{x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}}}});
+
+  // WoW chart
+  if(document.getElementById('cWoW')){
+    const cats=Object.keys(AGG);
+    const i1=WEEKS.indexOf(state.wowWeek1);const i2=WEEKS.indexOf(state.wowWeek2);
+    mc('cWoW',{type:'bar',data:{labels:cats,datasets:[{label:state.wowWeek1,data:cats.map(c=>i1>=0?AGG[c].sends[i1]:0),backgroundColor:'rgba(255,255,255,.35)',borderRadius:3,borderSkipped:false},{label:state.wowWeek2,data:cats.map(c=>i2>=0?AGG[c].sends[i2]:0),backgroundColor:'rgba(255,255,255,.12)',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},scales:{x:{ticks:{color:lc,font},grid:{display:false},border:{display:false}},y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}}}});
   }
 
-  // OR chart
-  const oc = document.getElementById('orChartCanvas');
-  if (oc) {
-    if (orChart) orChart.destroy();
-    orChart = new Chart(oc, {
-      type:'line',
-      data:{
-        labels: weeks_short,
-        datasets:[
-          {label:'Email OR %',data:OR_DATA,borderColor:'rgba(255,255,255,.7)',backgroundColor:'rgba(255,255,255,.04)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,.7)',borderWidth:2,pointHoverRadius:5},
-          {label:'35% benchmark',data:Array(27).fill(35),borderColor:'rgba(251,191,36,.3)',borderDash:[4,4],borderWidth:1,pointRadius:0,fill:false}
-        ]
-      },
-      options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.y.toFixed(1)+'%'}}},
-        scales:{
-          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
-          y:{min:26,max:45,ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}}
-        }
-      }
-    });
+  // Detail channel chart
+  if(state.detailCampaign){
+    const c=state.detailCampaign;
+    mc('cDetail',{type:'bar',data:{labels:['Email','Push','IAM','Inbox'],datasets:[{label:'Sent',data:[c.email_sent,c.push_sent,c.iam_sent||0,c.inbox_sent||0],backgroundColor:'rgba(255,255,255,.15)',borderRadius:3,borderSkipped:false},{label:'Opened',data:[c.email_opened,c.push_opened,c.iam_opened||0,c.inbox_opened||0],backgroundColor:'rgba(255,255,255,.5)',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},scales:{x:{ticks:{color:lc,font},grid:{display:false},border:{display:false}},y:{ticks:{color:lc,font,callback:v=>v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}}}});
   }
 
-  // Category OR bar chart
-  const cc = document.getElementById('catChartCanvas');
-  if (cc) {
-    if (catChart) catChart.destroy();
-    const catOR = Object.entries(WEEKLY_AGG).map(([cat,d])=>{
-      const totalS = d.sends.reduce((a,b)=>a+b,0);
-      const totalO = d.opens.reduce((a,b)=>a+b,0);
-      return {cat, or: totalS>0?(totalO/totalS*100).toFixed(1):0, color: d.color};
-    }).sort((a,b)=>b.or-a.or);
-
-    catChart = new Chart(cc, {
-      type:'bar',
-      data:{
-        labels: catOR.map(c=>c.cat),
-        datasets:[{data:catOR.map(c=>c.or),backgroundColor:catOR.map(c=>c.color),borderRadius:4,borderSkipped:false}]
-      },
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:c=>' '+c.parsed.x.toFixed(1)+'%'}}},
-        scales:{
-          x:{ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}},
-          y:{ticks:{color:lc,font},grid:{display:false},border:{display:false}}
-        }
-      }
-    });
-  }
-
-  // Push chart (trends view)
-  const pc = document.getElementById('pushChartCanvas');
-  if (pc) {
-    const pushSends = Object.entries(WEEKLY_AGG).map(([c,d])=>({cat:c,total:d.sends.reduce((a,b)=>a+b,0)*0.1,color:d.color}));
-    new Chart(pc, {
-      type:'bar',
-      data:{
-        labels: weeks_short,
-        datasets: Object.entries(WEEKLY_AGG).filter(([c])=>c!=='REVIEW').map(([cat,d])=>({
-          label:cat, data:d.sends.map(v=>Math.round(v*0.15)),
-          backgroundColor: d.color, borderRadius:2, borderSkipped:false
-        }))
-      },
-      options:{responsive:true,maintainAspectRatio:false,stacked:false,
-        plugins:{legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:14}},tooltip:{...tt,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()}}},
-        scales:{
-          x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
-          y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
-        }
-      }
-    });
-  }
-}
-
-// ── HELPERS ──
-function fmt(n) {
-  if (!n) return '—';
-  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
-  if (n >= 1000) return (n/1000).toFixed(0)+'K';
-  return n.toLocaleString();
-}
-
-function sortData(data) {
-  return [...data].sort((a,b) => {
-    let av = a[state.sortCol]||0, bv = b[state.sortCol]||0;
-    if (typeof av === 'string') av = av.toLowerCase();
-    if (typeof bv === 'string') bv = bv.toLowerCase();
-    return state.sortDir==='asc' ? (av>bv?1:-1) : (av<bv?1:-1);
+  // Scorecard sparklines
+  Object.entries(AGG).filter(([c])=>c!=='REVIEW').forEach(([cat,d])=>{
+    const id='sc-'+cat.replace(/[^a-z]/gi,'').toLowerCase();
+    if(document.getElementById(id)){
+      mc(id,{type:'line',data:{labels:ws,datasets:[{data:d.sends,borderColor:d.color,backgroundColor:'transparent',tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+    }
   });
 }
 
-function sortBy(col) {
-  if (state.sortCol === col) state.sortDir = state.sortDir==='desc'?'asc':'desc';
-  else { state.sortCol=col; state.sortDir='desc'; }
-  state.page = 1;
-  renderView();
-}
+// ── HELPERS ──
+function fmt(n){if(!n&&n!==0)return'—';n=+n;if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(0)+'K';return n.toLocaleString();}
+function sortData(data){return[...data].sort((a,b)=>{let av=a[state.sortCol]||0,bv=b[state.sortCol]||0;if(typeof av==='string'){av=av.toLowerCase();bv=bv.toLowerCase();}return state.sortDir==='asc'?(av>bv?1:-1):(av<bv?1:-1);});}
+function sortBy(col){if(state.sortCol===col)state.sortDir=state.sortDir==='desc'?'asc':'desc';else{state.sortCol=col;state.sortDir='desc';}state.page=1;renderView();}
+function changePage(d){state.page=Math.max(1,state.page+d);renderView();}
+function exportCSV(){const data=FILTERED.length>0?FILTERED:TOP_CAMPAIGNS;const h=['week','category','label','title','email_sent','email_opened','email_or','email_clicked','push_sent','push_opened'];const rows=[h.join(','),...data.map(r=>h.map(k=>r[k]||'').join(','))];const blob=new Blob([rows.join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='casino_crm_'+new Date().toISOString().slice(0,10)+'.csv';a.click();}
 
-function changePage(dir) {
-  state.page = Math.max(1, state.page + dir);
-  renderView();
-}
-
-function setWeekFilter() {
-  state.weekFrom = document.getElementById('weekFrom')?.value || '';
-  state.weekTo = document.getElementById('weekTo')?.value || '';
-  state.page = 1;
-  FILTERED = applyFilters(RAW_DATA);
-  renderView();
-}
-
-function clearWeeks() {
-  state.weekFrom = ''; state.weekTo = '';
-  state.page = 1;
-  FILTERED = applyFilters(RAW_DATA);
-  renderView();
-}
-
-function handleSearch(val) {
-  state.search = val;
-  state.page = 1;
-  FILTERED = applyFilters(RAW_DATA);
-  renderView();
-}
-
-function clearAllFilters() {
-  state.category = 'all'; state.weekFrom = ''; state.weekTo = ''; state.search = '';
-  state.page = 1;
-  FILTERED = applyFilters(RAW_DATA);
-  // Reset sidebar
-  document.querySelectorAll('.sidebar .nav[id^="sb-"]').forEach(n => n.classList.remove('on'));
-  const allNav = document.getElementById('sb-all');
-  if (allNav) allNav.classList.add('on');
-  renderView();
-}
-
-function attachEventListeners() {
-  // Drag and drop on upload zone
-  const zone = document.getElementById('dropZone');
-  if (zone) {
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault(); zone.classList.remove('drag');
-      if (e.dataTransfer.files[0]) {
-        const input = document.getElementById('uploadInput');
-        // Create synthetic event
-        const dt = new DataTransfer();
-        dt.items.add(e.dataTransfer.files[0]);
-        input.files = dt.files;
-        handleUpload({target: input});
-      }
-    });
-  }
-}
-
-function exportCSV() {
-  const data = FILTERED.length > 0 ? FILTERED : TOP_CAMPAIGNS;
-  const headers = ['week','category','label','title','email_sent','email_opened','email_or','email_clicked','push_sent','push_opened'];
-  const rows = [headers.join(','), ...data.map(r => headers.map(h => r[h]||'').join(','))];
-  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `casino_crm_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
+// Close search dropdown on outside click
+document.addEventListener('click',e=>{const dd=document.getElementById('searchDropdown');if(dd&&!e.target.closest('.search-wrap'))dd.style.display='none';});
 </script>
 </body>
 </html>
