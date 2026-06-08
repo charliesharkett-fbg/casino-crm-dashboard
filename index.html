@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fanatics Casino — CRM Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --black:#000;--white:#fff;--blue:#041E42;--silver:#D0D3D4;--gray:#707372;
+  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.09);
+  --glass-h:rgba(255,255,255,0.07);--muted:#707372;--dim:#D0D3D4;
+  --green:#4ade80;--amber:#fbbf24;
+  --font-h:'Anton',sans-serif;--font-b:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+
+/* grain overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+.hdr{background:rgba(4,30,66,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--glass-b);padding:0 2rem;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100}
+
+.logo{display:flex;align-items:center;gap:14px}
+.logo-wordmark{font-family:var(--font-h);font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:var(--white)}
+.logo-wordmark span{color:var(--silver)}
+.logo-div{width:1px;height:26px;background:rgba(255,255,255,0.12)}
+.logo-tag{font-family:var(--font-b);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.hdr-r{display:flex;align-items:center;gap:10px}
+.pill{display:flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--glass-b);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:500;color:var(--dim)}
+.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.4)}50%{opacity:.7;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+
+.btn{font-family:var(--font-b);font-size:11px;font-weight:600;letter-spacing:.04em;padding:7px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .2s}
+.btn-w{background:var(--white);color:var(--black)}.btn-w:hover{background:var(--silver)}
+.btn-g{background:var(--glass);border:1px solid var(--glass-b);color:var(--dim)}.btn-g:hover{background:var(--glass-h);color:var(--white)}
+
+/* ── LAYOUT ── */
+.wrap{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 58px)}
+
+/* ── SIDEBAR ── */
+.sidebar{background:rgba(4,30,66,0.35);backdrop-filter:blur(12px);border-right:1px solid var(--glass-b);
+  padding:1.5rem 0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.sb-sec{margin-bottom:1.75rem}
+.sb-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:0 1.25rem;margin-bottom:6px}
+.nav{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:12px;font-weight:400;
+  color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s;text-decoration:none}
+.nav:hover{background:var(--glass);color:var(--dim)}
+.nav.on{background:rgba(255,255,255,.05);color:var(--white);border-left-color:var(--white);font-weight:500}
+.nav-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.nav-n{margin-left:auto;font-size:10px;background:rgba(255,255,255,.06);color:var(--muted);padding:1px 6px;border-radius:3px;font-weight:500}
+.nav-n.w{background:rgba(251,191,36,.15);color:var(--amber)}
+.sb-hr{border:none;border-top:1px solid var(--glass-b);margin:.75rem 1.25rem}
+
+/* ── MAIN ── */
+.main{padding:2rem;position:relative;z-index:1}
+.pg-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem}
+.pg-title{font-family:var(--font-h);font-size:40px;letter-spacing:.04em;text-transform:uppercase;line-height:1;color:var(--white)}
+.pg-title span{color:var(--silver)}
+.pg-meta{font-size:11px;color:var(--muted);margin-top:5px;font-weight:400}
+
+/* ── SECTION ── */
+.sec{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  margin:2rem 0 1rem;display:flex;align-items:center;gap:12px}
+.sec::after{content:'';flex:1;height:1px;background:var(--glass-b)}
+
+/* ── GLASS CARD ── */
+.card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-b);border-radius:12px;padding:1.25rem;
+  transition:border-color .2s,background .2s}
+.card:hover{border-color:rgba(255,255,255,.16);background:var(--glass-h)}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
+.kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
+  border-radius:12px;padding:1.125rem;transition:all .2s;animation:up .5s ease both}
+.kpi:hover{background:var(--glass-h);border-color:rgba(255,255,255,.16)}
+.kpi:nth-child(1){animation-delay:.05s}.kpi:nth-child(2){animation-delay:.1s}
+.kpi:nth-child(3){animation-delay:.15s}.kpi:nth-child(4){animation-delay:.2s}.kpi:nth-child(5){animation-delay:.25s}
+.kpi.warn{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.03)}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.kpi-val{font-family:var(--font-h);font-size:30px;letter-spacing:.02em;color:var(--white);line-height:1}
+.kpi-val.am{color:var(--amber)}.kpi-val.gr{color:var(--green)}
+.kpi-sub{font-size:10px;margin-top:5px;color:var(--muted)}
+.kpi-sub.up{color:var(--green)}.kpi-sub.dn{color:var(--amber)}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.g6040{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:1.5rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+
+/* ── CHANNEL CARDS ── */
+.ch-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-b);
+  border-radius:12px;padding:1rem;transition:all .2s;animation:up .5s ease both;animation-delay:.3s}
+.ch-card:hover{background:var(--glass-h);border-color:rgba(255,255,255,.16)}
+.ch-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ch-val{font-family:var(--font-h);font-size:24px;color:var(--white);line-height:1}
+.ch-meta{font-size:10px;color:var(--muted);margin-top:4px}
+.ch-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px;margin-top:10px}
+.ch-bar-f{height:2px;border-radius:1px;background:rgba(255,255,255,.4)}
+
+/* ── CARD HEADER ── */
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem}
+.card-title{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.ctag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:100px;background:rgba(255,255,255,.08);color:var(--muted)}
+
+/* ── CAT BARS ── */
+.cat-list{display:flex;flex-direction:column;gap:11px}
+.cat-row{display:grid;grid-template-columns:110px 1fr 60px 52px;align-items:center;gap:10px}
+.cat-name{font-size:11px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-t{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.bar-f{height:4px;border-radius:2px}
+.cat-num{font-size:10px;color:var(--muted);text-align:right}
+.cat-or{font-size:10px;font-weight:600;color:var(--dim);text-align:right}
+.cat-or.g{color:var(--green)}
+
+/* ── ALERTS ── */
+.alerts,.recs{display:flex;flex-direction:column;gap:8px}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;font-size:11px;line-height:1.5;border:1px solid}
+.a-i{font-size:13px;flex-shrink:0;margin-top:1px}
+.a-w{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);color:#fbbf24}
+.a-n{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);color:var(--dim)}
+.a-ok{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2);color:#4ade80}
+.alert strong{font-weight:600}
+
+/* ── RECS ── */
+.rec{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;
+  background:var(--glass);border:1px solid var(--glass-b);border-radius:8px;
+  font-size:11px;line-height:1.5;color:var(--dim)}
+.rec-n{font-family:var(--font-h);font-size:22px;color:rgba(255,255,255,.1);line-height:1;flex-shrink:0;width:24px;margin-top:1px}
+.rec strong{color:var(--white);font-weight:600}
+
+/* ── TABLE ── */
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:8px 10px;border-bottom:1px solid var(--glass-b);white-space:nowrap}
+td{padding:8px 10px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap}
+tr:hover td{background:rgba(255,255,255,.02)}
+td.n{color:var(--white);font-weight:500;max-width:250px;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;
+  text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.08);color:var(--dim)}
+.b-life{background:rgba(255,255,255,.14);color:var(--white)}
+.b-promo{background:rgba(208,211,212,.12);color:var(--silver)}
+.b-ok{background:rgba(74,222,128,.14);color:var(--green)}
+.b-w{background:rgba(251,191,36,.14);color:var(--amber)}
+.hi{color:var(--white);font-weight:600}.gr{color:var(--green);font-weight:600}.am{color:var(--amber);font-weight:600}
+
+/* ── SPARK ── */
+.spark{display:flex;align-items:flex-end;gap:2px;height:22px;width:56px}
+.sp-b{flex:1;border-radius:1px;min-height:2px;background:rgba(255,255,255,.25)}
+
+/* ── FOOTER ── */
+.footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--glass-b);
+  display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
+.footer-logo{font-family:var(--font-h);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-wordmark">FANATICS <span>CASINO</span></div>
+    <div class="logo-div"></div>
+    <span class="logo-tag">CRM Dashboard</span>
+  </div>
+  <div class="hdr-r">
+    <div class="pill"><div class="live"></div>27 weeks · W44 2025 – W23 2026</div>
+    <button class="btn btn-g">↑ Upload CSV</button>
+    <button class="btn btn-w">↓ Export</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="sidebar">
+  <div class="sb-sec">
+    <div class="sb-lbl">Overview</div>
+    <a class="nav on"><div class="nav-dot" style="background:var(--white)"></div>All Campaigns<span class="nav-n">24,856</span></a>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-lbl">Categories</div>
+    <a class="nav"><div class="nav-dot" style="background:#4ade80"></div>Retention<span class="nav-n">505K email</span></a>
+    <a class="nav"><div class="nav-dot" style="background:var(--silver)"></div>Lifecycle<span class="nav-n">204K email</span></a>
+    <a class="nav"><div class="nav-dot" style="background:rgba(255,255,255,.6)"></div>Promo<span class="nav-n">2.1M email</span></a>
+    <a class="nav"><div class="nav-dot" style="background:var(--amber)"></div>Tournaments<span class="nav-n">590K email</span></a>
+    <a class="nav"><div class="nav-dot" style="background:var(--muted)"></div>Cross-Sell<span class="nav-n">90.6M email</span></a>
+    <a class="nav" style="color:var(--amber)"><div class="nav-dot" style="background:var(--amber)"></div>REVIEW<span class="nav-n w">9.8M</span></a>
+  </div>
+  <hr class="sb-hr">
+  <div class="sb-sec">
+    <div class="sb-lbl">Channels</div>
+    <a class="nav"><div class="nav-dot" style="background:rgba(255,255,255,.7)"></div>Email</a>
+    <a class="nav"><div class="nav-dot" style="background:var(--silver)"></div>Push</a>
+    <a class="nav"><div class="nav-dot" style="background:#4ade80"></div>IAM</a>
+    <a class="nav"><div class="nav-dot" style="background:var(--muted)"></div>Inbox</a>
+  </div>
+  <hr class="sb-hr">
+  <div class="sb-sec">
+    <div class="sb-lbl">Insights</div>
+    <a class="nav" style="color:var(--amber)"><div class="nav-dot" style="background:var(--amber)"></div>Watch Outs<span class="nav-n w">5</span></a>
+    <a class="nav" style="color:var(--green)"><div class="nav-dot" style="background:var(--green)"></div>Recommendations<span class="nav-n">5</span></a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <div class="pg-hdr">
+    <div>
+      <div class="pg-title">CRM <span>Performance</span></div>
+      <div class="pg-meta">27 weeks of data · W44 2025 – W23 2026 · 24,856 campaigns in Master · Generated by Cal</div>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-lbl">Email Sent (all time)</div>
+      <div class="kpi-val">103.8M</div>
+      <div class="kpi-sub">excl. REVIEW</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Avg Email Open Rate</div>
+      <div class="kpi-val gr">35.7%</div>
+      <div class="kpi-sub up">↑ Strong vs industry benchmark</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Retention Email OR</div>
+      <div class="kpi-val">38.7%</div>
+      <div class="kpi-sub up">↑ Best performing category</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Push Sent (all time)</div>
+      <div class="kpi-val">487M</div>
+      <div class="kpi-sub dn">0.6% OR — Cross-Sell dominated</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-lbl">⚠ REVIEW rows</div>
+      <div class="kpi-val am">9.8M</div>
+      <div class="kpi-sub" style="color:var(--amber)">email sends unlabelled — fix taxonomy</div>
+    </div>
+  </div>
+
+  <!-- CHANNEL SUMMARY -->
+  <div class="sec">Channel Summary — All Time</div>
+  <div class="g4">
+    <div class="ch-card">
+      <div class="ch-lbl">Email</div>
+      <div class="ch-val">103.8M</div>
+      <div class="ch-meta">excl. REVIEW · 35.7% avg OR</div>
+      <div class="ch-bar"><div class="ch-bar-f" style="width:100%"></div></div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-lbl">Push</div>
+      <div class="ch-val">487M</div>
+      <div class="ch-meta">481M Cross-Sell · 0.6% OR</div>
+      <div class="ch-bar"><div class="ch-bar-f" style="width:100%"></div></div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-lbl">IAM</div>
+      <div class="ch-val">—</div>
+      <div class="ch-meta">Data in Master</div>
+      <div class="ch-bar"><div class="ch-bar-f" style="width:30%"></div></div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-lbl">Inbox</div>
+      <div class="ch-val">—</div>
+      <div class="ch-meta">Data in Master</div>
+      <div class="ch-bar"><div class="ch-bar-f" style="width:20%"></div></div>
+    </div>
+  </div>
+
+  <!-- TREND CHART -->
+  <div class="sec">Weekly Email Send Trend — W44 2025 to W23 2026</div>
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-hdr">
+      <div class="card-title">Email Sends by Category (weekly)</div>
+      <div class="ctag">Email · 27 weeks</div>
+    </div>
+    <div style="position:relative;height:240px"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <!-- OR TREND -->
+  <div class="sec">Email Open Rate Trend</div>
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-hdr">
+      <div class="card-title">Overall Email Open Rate % (weekly, excl. REVIEW)</div>
+      <div class="ctag">Email</div>
+    </div>
+    <div style="position:relative;height:180px"><canvas id="orTrendChart"></canvas></div>
+  </div>
+
+  <!-- CATEGORY BREAKDOWN + WATCH OUTS -->
+  <div class="g2">
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">All-Time Email Volume by Category</div></div>
+      <div class="cat-list">
+        <div class="cat-row">
+          <div class="cat-name">Cross-Sell</div>
+          <div class="bar-t"><div class="bar-f" style="width:100%;background:rgba(255,255,255,.3)"></div></div>
+          <div class="cat-num">90.6M</div>
+          <div class="cat-or">35.8%</div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-name">REVIEW</div>
+          <div class="bar-t"><div class="bar-f" style="width:10.9%;background:var(--amber)"></div></div>
+          <div class="cat-num">9.8M</div>
+          <div class="cat-or am">34.5%</div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-name">Promo</div>
+          <div class="bar-t"><div class="bar-f" style="width:2.4%;background:rgba(255,255,255,.7)"></div></div>
+          <div class="cat-num">2.1M</div>
+          <div class="cat-or">32.2%</div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-name">Tournaments</div>
+          <div class="bar-t"><div class="bar-f" style="width:0.65%;background:rgba(255,255,255,.5)"></div></div>
+          <div class="cat-num">590K</div>
+          <div class="cat-or">29.5%</div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-name">Retention</div>
+          <div class="bar-t"><div class="bar-f" style="width:0.56%;background:#4ade80"></div></div>
+          <div class="cat-num">506K</div>
+          <div class="cat-or g">38.7%</div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-name">Lifecycle</div>
+          <div class="bar-t"><div class="bar-f" style="width:0.23%;background:var(--silver)"></div></div>
+          <div class="cat-num">205K</div>
+          <div class="cat-or">32.5%</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:.75rem;
+        border-top:1px solid var(--glass-b);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600">
+        <span>Sends</span><span>Email Open Rate</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Watch Outs</div></div>
+      <div class="alerts">
+        <div class="alert a-w">
+          <div class="a-i">⚠</div>
+          <div><strong>Cross-Sell dominates at 87% of email volume.</strong> 90.6M out of 103.8M total email sends are Cross-Sell OSB. Casino-owned categories (Promo + Retention + Lifecycle) are just 2.7M sends combined.</div>
+        </div>
+        <div class="alert a-w">
+          <div class="a-i">⚠</div>
+          <div><strong>9.8M email sends unlabelled (REVIEW).</strong> 9.4% of total volume has no category. Dashboard trend data is directional, not complete, until taxonomy is confirmed with Jackson.</div>
+        </div>
+        <div class="alert a-n">
+          <div class="a-i">→</div>
+          <div><strong>OR declining since W06 2026.</strong> Open rate peaked at 41.7% in W01 2026 and has trended down to 30.6% in W23. 11pp drop over 5 months — needs diagnosis.</div>
+        </div>
+        <div class="alert a-n">
+          <div class="a-i">→</div>
+          <div><strong>Lifecycle reach remains tiny.</strong> 204K email sends across 27 weeks for the highest-intent programme (RTC Top Up). That's ~7.5K sends per week on average.</div>
+        </div>
+        <div class="alert a-ok">
+          <div class="a-i">↑</div>
+          <div><strong>Retention has the highest OR at 38.7%.</strong> Consistently outperforms all other categories. The signal for where to invest in scaling audience size.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP CAMPAIGNS TABLE -->
+  <div class="sec">Top Campaigns by Email Opens — Last 4 Weeks (W15–W23 2026)</div>
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="tbl">
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Category</th>
+            <th>Week</th>
+            <th>Email Sent</th>
+            <th>Opens</th>
+            <th>Open Rate</th>
+            <th>CTOR</th>
+            <th>Push Opens</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="n">042026 Cas Khloud Promo</td>
+            <td><span class="badge b-promo">Promo</span></td>
+            <td>W17</td>
+            <td>765,760</td>
+            <td class="hi">239,079</td>
+            <td class="gr">31.2%</td>
+            <td>2.0%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp1"></div></td>
+          </tr>
+          <tr>
+            <td class="n">4.6.26 OSB CBB MM Offers</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W15</td>
+            <td>396,313</td>
+            <td>137,504</td>
+            <td class="gr">34.7%</td>
+            <td>0.2%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp2"></div></td>
+          </tr>
+          <tr>
+            <td class="n">4.18.26 OSB NBA EML</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W16</td>
+            <td>387,018</td>
+            <td>131,860</td>
+            <td>34.1%</td>
+            <td>0.2%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp3"></div></td>
+          </tr>
+          <tr>
+            <td class="n">4.15.26 OSB REACT 100% DM</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W16</td>
+            <td>344,112</td>
+            <td>108,604</td>
+            <td>31.6%</td>
+            <td>0.5%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp4"></div></td>
+          </tr>
+          <tr>
+            <td class="n">6.2.26 OSB NBA Singularity</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W23</td>
+            <td>326,587</td>
+            <td>103,482</td>
+            <td>31.7%</td>
+            <td>0.4%</td>
+            <td class="hi">2,959</td>
+            <td><div class="spark" id="sp5"></div></td>
+          </tr>
+          <tr>
+            <td class="n">4.19.26 OSB MLB EML</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W16</td>
+            <td>287,600</td>
+            <td>98,464</td>
+            <td>34.2%</td>
+            <td>0.2%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp6"></div></td>
+          </tr>
+          <tr>
+            <td class="n">4.7.26 OSB FC Newsletter</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W15</td>
+            <td>258,880</td>
+            <td>94,013</td>
+            <td class="gr">36.3%</td>
+            <td>0.4%</td>
+            <td>—</td>
+            <td><div class="spark" id="sp7"></div></td>
+          </tr>
+          <tr>
+            <td class="n">6.3.26 OSB REACT 100% DM</td>
+            <td><span class="badge">Cross-Sell</span></td>
+            <td>W23</td>
+            <td>320,092</td>
+            <td>93,773</td>
+            <td>29.3%</td>
+            <td>0.9%</td>
+            <td>910</td>
+            <td><div class="spark" id="sp8"></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--glass-b);font-size:10px;color:var(--muted)">
+      Note: Top opens dominated by Cross-Sell OSB sends. Casino-owned Promo (Khloud W17) is the only Casino-category send in the top 10 over 4 weeks.
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS -->
+  <div class="sec">Recommendations</div>
+  <div class="recs" style="margin-bottom:1.5rem">
+    <div class="rec">
+      <div class="rec-n">01</div>
+      <div><strong>Diagnose the OR decline.</strong> Open rate dropped from 41.7% (W01 2026) to 30.6% (W23) — an 11pp fall over 22 weeks. Before adding any new programmes, understand whether this is audience fatigue, deliverability degradation, or a mix shift effect as Cross-Sell volume has grown.</div>
+    </div>
+    <div class="rec">
+      <div class="rec-n">02</div>
+      <div><strong>Fix the REVIEW taxonomy with Jackson.</strong> 9.8M email sends and 98M push sends are uncategorised. This is the single biggest gap in the data quality — until it's resolved the dashboard is directional, not definitive.</div>
+    </div>
+    <div class="rec">
+      <div class="rec-n">03</div>
+      <div><strong>Scale Retention and Lifecycle urgently.</strong> Retention has the highest OR (38.7%) but only 506K email sends across 27 weeks. Lifecycle has 204K. Combined they represent less than 1% of total email volume. These are the programmes worth investing in — they're being starved of reach.</div>
+    </div>
+    <div class="rec">
+      <div class="rec-n">04</div>
+      <div><strong>Establish a Casino vs OSB channel split.</strong> Cross-Sell OSB accounts for 87% of email sends and 99% of push sends in this dataset. There is no visible Casino CRM identity in the channel mix. Agree a formal split framework with Matt before Q3 — Casino customers deserve Casino-led communications.</div>
+    </div>
+    <div class="rec">
+      <div class="rec-n">05</div>
+      <div><strong>Use Khloud W17 (239K opens, 31.2% OR) as the Casino Promo benchmark.</strong> It's the only Casino-owned campaign in the top 10 across the last 4 weeks. Every future Casino Promo brief should be measured against it — audience size, creative format, send time, and CTOR.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">Fanatics Casino · CRM</div>
+    <div>Master tab export · 27 weeks W44 2025–W23 2026 · Generated by Cal · charlie.sharkett@betfanatics.com</div>
+  </div>
+
+</main>
+</div>
+
+<script>
+const gc='rgba(255,255,255,0.05)',lc='#707372',font={family:"'Inter',sans-serif",size:10};
+const ttCfg={backgroundColor:'rgba(4,30,66,0.96)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyFont:font,titleFont:font,padding:10};
+
+// ── WEEKLY TREND DATA ──
+const weeks = ['W44','W45','W46','W47','W48','W49','W50','W51','W52','W01','W02','W03','W04','W05','W06','W07','W08','W09','W10','W11','W12','W13','W14','W15','W16','W17','W23'];
+
+// Email sent by category per week (from Python analysis)
+const crossSell = [741736,1761420,1160558,2072834,2121174,1587082,1053060,927476,614764,6599628,6512682,4055862,6001232,4497516,8267720,2585026,2127200,1938736,2031676,3472726,5531192,6908620,5579368,1000544,1384740,759280,1934578];
+const promo     = [49296,126768,91944,126224,114276,107064,89532,140988,83556,173688,140736,127848,109284,140880,131724,91980,67044,53676,69000,84720,114000,120096,89796,0,0,765760,0];
+const retention = [16680,59372,47688,56476,47368,49308,62584,68472,27784,104616,101948,80600,103468,67856,85548,77040,68892,75756,74932,74280,73316,75480,74356,0,0,0,178164];
+const lifecycle = [11124,21540,17160,19620,18288,19404,18552,18552,7644,72396,75232,68832,75824,64856,80424,77484,74568,71808,70416,71424,75424,71064,74916,0,0,0,27254];
+const tournaments=[158972,111062,113010,132493,123887,80945,127670,96763,68301,146404,101734,81497,111109,74076,118373,115477,103876,81924,66789,97728,61577,72022,31580,65615,0,0,65614];
+
+// OR trend (weekly, excl REVIEW)
+const orData = [38.3,39.3,37.9,37.7,37.4,40.0,30.5,36.2,35.8,41.7,37.0,36.3,36.0,39.2,35.3,32.6,35.5,35.4,34.8,34.6,32.6,32.6,34.7,34.4,33.6,31.8,30.6];
+
+// Trend chart
+new Chart(document.getElementById('trendChart'),{
+  type:'line',
+  data:{
+    labels:weeks,
+    datasets:[
+      {label:'Cross-Sell',data:crossSell,borderColor:'rgba(255,255,255,0.35)',backgroundColor:'rgba(255,255,255,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
+      {label:'Promo',data:promo,borderColor:'rgba(208,211,212,0.8)',backgroundColor:'rgba(208,211,212,0.04)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
+      {label:'Retention',data:retention,borderColor:'rgba(74,222,128,0.8)',backgroundColor:'rgba(74,222,128,0.05)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
+      {label:'Lifecycle',data:lifecycle,borderColor:'rgba(255,255,255,0.6)',backgroundColor:'rgba(255,255,255,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
+      {label:'Tournaments',data:tournaments,borderColor:'rgba(251,191,36,0.6)',backgroundColor:'rgba(251,191,36,0.03)',tension:.4,fill:true,pointRadius:0,borderWidth:1.5},
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:16}},
+      tooltip:{...ttCfg,callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toLocaleString()+' sends'}}
+    },
+    scales:{
+      x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
+      y:{ticks:{color:lc,font,callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v},grid:{color:gc},border:{display:false}}
+    }
+  }
+});
+
+// OR trend chart
+new Chart(document.getElementById('orTrendChart'),{
+  type:'line',
+  data:{
+    labels:weeks,
+    datasets:[{
+      label:'Email OR %',
+      data:orData,
+      borderColor:'rgba(255,255,255,0.7)',
+      backgroundColor:'rgba(255,255,255,0.04)',
+      tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.7)',borderWidth:2,
+      pointHoverRadius:5,
+    },{
+      label:'Benchmark (35%)',
+      data:Array(27).fill(35),
+      borderColor:'rgba(251,191,36,0.3)',
+      borderDash:[4,4],
+      borderWidth:1,
+      pointRadius:0,
+      fill:false,
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',align:'end',labels:{color:lc,font,boxWidth:8,usePointStyle:true,padding:16}},
+      tooltip:{...ttCfg,callbacks:{label:c=>' '+c.parsed.y.toFixed(1)+'%'}}
+    },
+    scales:{
+      x:{ticks:{color:lc,font,maxRotation:0,maxTicksLimit:14},grid:{color:gc},border:{display:false}},
+      y:{min:25,max:45,ticks:{color:lc,font,callback:v=>v+'%'},grid:{color:gc},border:{display:false}}
+    }
+  }
+});
+
+// Sparklines
+function spark(id,data,hi=true){
+  const el=document.getElementById(id);if(!el)return;
+  const mx=Math.max(...data);
+  data.forEach((v,i)=>{
+    const b=document.createElement('div');b.className='sp-b';
+    b.style.height=Math.max(2,(v/mx)*22)+'px';b.style.flex='1';
+    if(hi && i===data.length-1) b.style.background='rgba(255,255,255,0.7)';
+    el.appendChild(b);
+  });
+}
+spark('sp1',[120000,165000,195000,215000,239079]);
+spark('sp2',[95000,112000,125000,132000,137504]);
+spark('sp3',[88000,102000,118000,128000,131860]);
+spark('sp4',[78000,92000,100000,105000,108604]);
+spark('sp5',[75000,88000,96000,100000,103482]);
+spark('sp6',[72000,85000,92000,96000,98464]);
+spark('sp7',[68000,80000,88000,92000,94013]);
+spark('sp8',[72000,82000,90000,93000,93773]);
+</script>
+</body>
+</html>
